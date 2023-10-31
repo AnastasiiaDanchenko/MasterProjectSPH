@@ -23,12 +23,15 @@
     <ClInclude Include="headers\CompileShaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="headers\Parameters.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Basic.shader" />
     <None Include="Shaders\Particle.shader" />
-    <None Include="Shaders\ParticleShader.frag" />
+    <None Include="Shaders\particle.frag" />
     <None Include="Shaders\ParticleShader.geom" />
-    <None Include="Shaders\ParticleShader.vert" />
+    <None Include="Shaders\particle.vert" />
   </ItemGroup>
 </Project>

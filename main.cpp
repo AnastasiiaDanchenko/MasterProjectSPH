@@ -1,20 +1,19 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "headers/CompileShaders.h"
+#include "headers/Parameters.h"
 //#include "headers/SimulationFalling.h"
 
 #include <iostream>
-#include <string>
 #include <vector>
+#include <algorithm>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
 #endif
-
-const int WINDOW_WIDTH = 800;
-const int WINDOW_HEIGHT = 800;
 
 // Close the window when pressing ESC
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -24,19 +23,6 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods
         }
     }
 }
-
-// Initialize grid size for simulation
-const int GRID_SIZE = 30;
-
-const int GRID_WIDTH = 20;
-const int GRID_HEIGHT = 15;
-
-// Initialize grid spacing
-const float SPACING = 2.0f / GRID_SIZE;
-const float SUPPORT = 2.1 * SPACING;
-
-// Rest density of the fluid
-const float DENSITY = .98f;
 
 class Particle {
 public:
@@ -92,19 +78,23 @@ void InitParticles(int width, int height) {
 }
 
 // Initialize boundaries
-void InitBoundaries(int width, int height) {
+void InitBoundaries() {
+    int width = WINDOW_WIDTH / (2 * SPACING) - 1;
+    int hight = WINDOW_HEIGHT / (2 * SPACING) - 1;
+
+    std::cout << width << " " << hight << std::endl;
+
     for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
-            if (i > 2 && i < 17 && j > 2) {
-                continue;
+        for (int j = 0; j < hight; j++) {
+            if (i < 3 || i > width - 4 || j < 3 || j > hight - 4) {
+                Particle p;
+
+                p.x = (i + 1) * SPACING;
+                p.y = (j + 1) * SPACING;
+                p.isFluid = false;
+
+                particles.push_back(p);
             }
-            Particle p;
-
-            p.x = -1.0f + i * SPACING + SPACING / 2.0f;
-            p.y = -1.0f + j * SPACING + SPACING / 2.0f;
-            p.isFluid = false;
-
-            particles.push_back(p);
         }
     }
 }
@@ -253,7 +243,7 @@ void ComputePressure(const float stiffness) {
         if (particles[i].isFluid == false) {
             continue;
         }
-        particles[i].pressure = std::max(0.0f, stiffness * (particles[i].density / DENSITY - 1));
+        particles[i].pressure = std::max(0.0f, stiffness * (particles[i].density / REST_DENSITY - 1));
         if (particles[i].pressure != 0 && i != 136) {
             int a = 0;
         }
@@ -351,13 +341,14 @@ void FallingSimulation() {
 
 void Setup() {
     //initialize particles
-    InitBoundaries(GRID_WIDTH, GRID_HEIGHT);
+    std::cout << "Initializing particles..." << std::endl;
+    InitBoundaries();
     InitParticles(5, 5);
 
     for (int i = 0; i < particles.size(); i++) {
         // assign equal mass and rest density to all particles
-        particles[i].mass = SPACING * SPACING / DENSITY;
-        particles[i].density = DENSITY;
+        particles[i].mass = SPACING * SPACING / REST_DENSITY;
+        particles[i].density = REST_DENSITY;
     }
 }
 
@@ -366,6 +357,9 @@ int main() {
         std::cerr << "Failed to initialize GLFW!" << std::endl;
         return -1;
     }
+    
+    // Read parameters from the input file
+    readParameters();
 
     GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "SPH solver in 2D", nullptr, nullptr);
     if (!window) {
@@ -389,7 +383,7 @@ int main() {
     Setup();
 
     // Load the provided shader program
-    ShaderProgramSource source = ParseShader("particle.vert", "particle.frag");
+    ShaderProgramSource source = ParseShader("Shaders/particle.vert", "Shaders/particle.frag");
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
 
     glUseProgram(shader);
@@ -404,18 +398,39 @@ int main() {
 
         glClear(GL_COLOR_BUFFER_BIT);
 
+        // Set up the projection matrix
+        glm::mat4 projection = glm::ortho(-1.0f, static_cast<float>(WINDOW_WIDTH), -1.0f, static_cast<float>(WINDOW_HEIGHT), -1.0f, 1.0f);
+
         // Render particles using the shader
+        glUseProgram(shader); // Ensure the correct shader is active
+
         for (const Particle& p : particles) {
-            glm::mat4 modelViewProjection = glm::mat4(1.0f); // Set your MVP matrix here
+            // Set the model matrix to translate the particle to its position
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(p.x, p.y, 0.0f));
+
+            // Combine the model and projection matrices to form the MVP matrix
+            glm::mat4 modelViewProjection = projection * model;
 
             // Set the MVP matrix as a uniform
             glUniformMatrix4fv(u_MVP, 1, GL_FALSE, &modelViewProjection[0][0]);
 
-            // Draw the particle as a point
-            glBegin(GL_POINTS);
-            glVertex2f(p.x, p.y);
+            int numSegments = 20; // Number of segments to approximate a circle
+            float radius = 4.0f; // Radius of the circle
+
+            glBegin(GL_TRIANGLE_FAN);
+            glVertex2f(p.x, p.y); // Center of the circle
+
+            for (int i = 0; i <= numSegments; ++i) {
+                float angle = 2.0f * M_PI * static_cast<float>(i) / numSegments;
+                float x = p.x + radius * cos(angle);
+                float y = p.y + radius * sin(angle);
+                glVertex2f(x, y);
+            }
+
             glEnd();
         }
+
+        glUseProgram(0); // Unbind the shader
 
         glfwSwapBuffers(window);
         glfwPollEvents();

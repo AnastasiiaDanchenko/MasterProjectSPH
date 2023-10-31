@@ -143,13 +143,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\CompileShaders.h" />
+    <ClInclude Include="headers\Parameters.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Basic.shader" />
     <None Include="Shaders\Particle.shader" />
-    <None Include="Shaders\ParticleShader.frag" />
+    <None Include="Shaders\particle.frag" />
     <None Include="Shaders\ParticleShader.geom" />
-    <None Include="Shaders\ParticleShader.vert" />
+    <None Include="Shaders\particle.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
