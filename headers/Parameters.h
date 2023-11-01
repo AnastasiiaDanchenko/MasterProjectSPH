@@ -1,55 +1,30 @@
 #pragma once
-
 #include <string>
+#include <iostream>
 #include <fstream>
+#include <sstream>
 
 // Read parameters for the SPH simulation from a .csv file
 const std::string fileName = "parameters.csv";
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // Window parameters
-int WINDOW_WIDTH;
-int WINDOW_HEIGHT;
+extern int WINDOW_WIDTH;
+extern int WINDOW_HEIGHT;
+extern int PARTICLE_NEIGHBORS; // Visualized neighbors for a given particle
 
 // Initial grid parameters
-int PARTICLES_PER_DIMENSION;
-float SPACING;
+extern int PARTICLES_PER_DIMENSION;
+extern float SPACING;
 
 // SPH parameters
-float SUPPORT;
-float REST_DENSITY;
+extern float SUPPORT;
+extern float REST_DENSITY;
+extern float TIME_STEP;
+extern float STIFFNESS;
+extern float VISCOSITY;
 
-std::ifstream file(fileName);
-
-void readParameters() {
-	if (!file.is_open()) {
-		std::cout << "Error opening file " << fileName << std::endl;
-		std::exit(1);
-	}
-
-	std::string line;
-	while (std::getline(file, line)) {
-		std::istringstream iss(line);
-		std::string parameterName;
-		std::string parameterValue;
-		std::getline(iss, parameterName, ',');
-		std::getline(iss, parameterValue, ',');
-		if (parameterName == "window_width") {
-			WINDOW_WIDTH = std::stoi(parameterValue);
-		}
-		else if (parameterName == "window_hight") {
-			WINDOW_HEIGHT = std::stoi(parameterValue);
-		}
-		else if (parameterName == "spacing") {
-			SPACING = std::stod(parameterValue);
-		}
-		else if (parameterName == "support") {
-			SUPPORT = SPACING * std::stod(parameterValue);
-		}
-		else if (parameterName == "density") {
-			REST_DENSITY = std::stod(parameterValue);
-		}
-		else if (parameterName == "particles") {
-			PARTICLES_PER_DIMENSION = std::stoi(parameterValue);
-		}
-	}
-}
+void readParameters();
