@@ -64,13 +64,13 @@ float rotationAngleRad = rotationAngle * M_PI / 180.0f;  // Convert to radians
 std::vector<Particle> particles;
 
 // Initialize uniformed grid of fluid particles
-void InitParticles(int width, int height) {
-    for (int i = 0; i < width; i++) {
-        for (int j = 0; j < height; j++) {
+void InitParticles() {
+    for (int i = 0; i < PARTICLES_PER_DIMENSION; i++) {
+        for (int j = 0; j < PARTICLES_PER_DIMENSION; j++) {
             Particle p;
 
-            p.x = -0.72f + i * SPACING + SPACING / 2.0f;
-            p.y = -0.5f + j * SPACING + SPACING / 2.0f;
+            p.x = (i + 4) * SPACING;
+            p.y = (j + 4) * SPACING;
 
             particles.push_back(p);
         }
@@ -81,8 +81,6 @@ void InitParticles(int width, int height) {
 void InitBoundaries() {
     int width = WINDOW_WIDTH / (2 * SPACING) - 1;
     int hight = WINDOW_HEIGHT / (2 * SPACING) - 1;
-
-    std::cout << width << " " << hight << std::endl;
 
     for (int i = 0; i < width; i++) {
         for (int j = 0; j < hight; j++) {
@@ -341,9 +339,8 @@ void FallingSimulation() {
 
 void Setup() {
     //initialize particles
-    std::cout << "Initializing particles..." << std::endl;
     InitBoundaries();
-    InitParticles(5, 5);
+    InitParticles();
 
     for (int i = 0; i < particles.size(); i++) {
         // assign equal mass and rest density to all particles
@@ -404,6 +401,11 @@ int main() {
         // Render particles using the shader
         glUseProgram(shader); // Ensure the correct shader is active
 
+        // Set a uniform to indicate whether a particle is a boundary
+        int isBoundaryLocation = glGetUniformLocation(shader, "isBoundary");
+        // Pass an additional uniform to indicate if a particle is a neighbor
+        int isNeighborLocation = glGetUniformLocation(shader, "isNeighbor");
+
         for (const Particle& p : particles) {
             // Set the model matrix to translate the particle to its position
             glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(p.x, p.y, 0.0f));
@@ -413,6 +415,20 @@ int main() {
 
             // Set the MVP matrix as a uniform
             glUniformMatrix4fv(u_MVP, 1, GL_FALSE, &modelViewProjection[0][0]);
+            glUniform1i(isBoundaryLocation, p.isFluid ? 0 : 1);
+
+            int isNeighbor = 0; // Initialize isNeighbor flag
+
+            //check if particle is a neighbor of a fluid particle number 25 
+            for (int i = 0; i < particles[500].neighbors.size(); i++) {
+                if (&p == particles[500].neighbors[i]) {
+                    if (&p == &particles[500]) { isNeighbor = 2; } 
+                    else { isNeighbor = 1; } // Set isNeighbor to 1 if it's a neighbor 
+                    break;
+                }
+            }
+            // Now, set the isNeighbor attribute for the current particle
+            glUniform1i(isNeighborLocation, isNeighbor);
 
             int numSegments = 20; // Number of segments to approximate a circle
             float radius = 4.0f; // Radius of the circle

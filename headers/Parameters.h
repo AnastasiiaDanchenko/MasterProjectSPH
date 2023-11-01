@@ -10,8 +10,11 @@ const std::string fileName = "parameters.csv";
 int WINDOW_WIDTH;
 int WINDOW_HEIGHT;
 
-// SPH parameters
+// Initial grid parameters
+int PARTICLES_PER_DIMENSION;
 float SPACING;
+
+// SPH parameters
 float SUPPORT;
 float REST_DENSITY;
 
@@ -44,6 +47,9 @@ void readParameters() {
 		}
 		else if (parameterName == "density") {
 			REST_DENSITY = std::stod(parameterValue);
+		}
+		else if (parameterName == "particles") {
+			PARTICLES_PER_DIMENSION = std::stoi(parameterValue);
 		}
 	}
 }
