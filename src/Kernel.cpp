@@ -11,17 +11,6 @@ float CubicSplineKernel(Eigen::Vector2f r) {
 		return alpha * 0.25 * pow(2 - q, 3);
 	}
     return 0.0f;
-
-    /*float q = distance / radius;
-    float result = 0.0f;
-    float alpha = 5 / (14 * M_PI * radius * radius);
-
-    float t1 = std::max(0.0f, 1.0f - q);
-    float t2 = std::max(0.0f, 2.0f - q);
-
-    result = alpha * (t2 * t2 * t2 - 4.0f * t1 * t1 * t1);
-
-    return result;*/
 }
 
 // Compute cubic spline kernel gradient
@@ -36,17 +25,6 @@ Eigen::Vector2f CubicSplineKernelGradient(Eigen::Vector2f r) {
         derivative = alpha / SPACING * (-0.75 * pow(2 - q, 2));
 	}
     return derivative * r.normalized();
-
-   /* float q = distance / radius;
-    float result = 0.0f;
-    float alpha = 5 / (14 * M_PI * radius * radius);
-
-    float t1 = std::max(0.0f, 1.0f - q);
-    float t2 = std::max(0.0f, 2.0f - q);
-
-    result = alpha * (3.0f * t2 * t2 - 12.0f * t1 * t1);
-
-    return result;*/
 }
 
 // Test the kernel function and its gradient for uniformed grid of particles

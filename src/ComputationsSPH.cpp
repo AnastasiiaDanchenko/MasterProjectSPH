@@ -2,7 +2,6 @@
 
 // Loop through all particles and compute density
 void ComputeDensityPressure() {
-
     for (auto& p : particles) {
         if (p.isFluid == false) { // Skip boundary particles
             continue;
@@ -23,13 +22,13 @@ void ComputeDensityPressure() {
 }
 
 void ComputeAcceleration() {
-    // Gravity force
-    Eigen::Vector2f acceleration = GRAVITY;
-
     for (auto& p : particles) {
         if (p.isFluid == false) { // Skip boundary particles
 			continue;
 		}
+
+        // Gravity force
+        Eigen::Vector2f acceleration = GRAVITY;
 
         for (auto neighbor : p.neighbors) {
             if (neighbor == &p) { continue; } // Skip self
@@ -38,7 +37,7 @@ void ComputeAcceleration() {
             const Eigen::Vector2f kernel = CubicSplineKernelGradient(r);
 
             // Pressure force
-            acceleration += -neighbor->mass * (p.pressure / pow(p.density, 2) + neighbor->pressure / pow(neighbor->density, 2)) 
+            acceleration -= neighbor->mass * (p.pressure / pow(p.density, 2) + neighbor->pressure / pow(neighbor->density, 2)) 
                 * kernel;
 
             // Viscosity force
@@ -60,5 +59,4 @@ void UpdateParticles() {
 		// Update position
 		p.position += TIME_STEP * p.velocity;
     }
-    std::cout << particles[396].position << std::endl;
 }
