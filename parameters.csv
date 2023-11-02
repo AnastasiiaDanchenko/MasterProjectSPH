@@ -1,0 +1,10 @@
+window_width,500
+window_hight,400
+spacing,5.
+support,2.1
+density,1
+particles,25
+timestep,0.005
+stiffness,10000.0
+viscosity,10
+neighbors,550
