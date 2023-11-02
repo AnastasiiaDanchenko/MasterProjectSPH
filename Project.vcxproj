@@ -76,7 +76,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -93,7 +93,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,7 +110,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +127,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

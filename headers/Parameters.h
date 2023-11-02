@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <Eigen/Dense>
 
 // Read parameters for the SPH simulation from a .csv file
 const std::string fileName = "parameters.csv";
@@ -26,5 +27,6 @@ extern float REST_DENSITY;
 extern float TIME_STEP;
 extern float STIFFNESS;
 extern float VISCOSITY;
+extern Eigen::Vector2f GRAVITY;
 
 void readParameters();

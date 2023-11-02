@@ -1,2 +1,2 @@
-# MasterProjectSPH
-Neighbor search data structures implementation for SPH fluid simulation
+# Master Project: SPH
+Neighbor search data structures analysis for SPH fluid simulation.

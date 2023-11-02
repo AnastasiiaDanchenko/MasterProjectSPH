@@ -75,7 +75,7 @@ int main() {
 
         for (const Particle& p : particles) {
             // Set the model matrix to translate the particle to its position
-            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(p.x, p.y, 0.0f));
+            glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(p.position.x(), p.position.y(), 0.0f));
 
             // Combine the model and projection matrices to form the MVP matrix
             glm::mat4 modelViewProjection = projection * model;
@@ -101,12 +101,12 @@ int main() {
             float radius = 4.0f; // Radius of the circle
 
             glBegin(GL_TRIANGLE_FAN);
-            glVertex2f(p.x, p.y); // Center of the circle
+            glVertex2f(p.position.x(), p.position.y()); // Center of the circle
 
             for (int i = 0; i <= numSegments; ++i) {
                 float angle = 2.0f * M_PI * static_cast<float>(i) / numSegments;
-                float x = p.x + radius * cos(angle);
-                float y = p.y + radius * sin(angle);
+                float x = p.position.x() + radius * cos(angle);
+                float y = p.position.y() + radius * sin(angle);
                 glVertex2f(x, y);
             }
 

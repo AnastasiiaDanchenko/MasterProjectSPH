@@ -2,8 +2,7 @@
 
 void Simulation() {
     NeighborSearch();
-    ComputeDensity();
-    ComputePressure();
+    ComputeDensityPressure();
     ComputeAcceleration();
     UpdateParticles();
 }

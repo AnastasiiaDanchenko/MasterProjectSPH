@@ -5,12 +5,9 @@
 
 class Particle {
 public:
-    float x;
-    float y;
-    float vx;
-    float vy;
-    float ax;
-    float ay;
+    Eigen::Vector2f position;
+    Eigen::Vector2f velocity;
+    Eigen::Vector2f acceleration;
 
     float mass;
     float density;

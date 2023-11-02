@@ -1,7 +1,6 @@
 #pragma once
 #include "Kernel.h"
 
-void ComputeDensity();
-void ComputePressure();
+void ComputeDensityPressure();
 void ComputeAcceleration();
 void UpdateParticles();

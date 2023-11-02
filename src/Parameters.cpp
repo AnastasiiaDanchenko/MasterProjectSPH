@@ -3,13 +3,17 @@
 int WINDOW_WIDTH;
 int WINDOW_HEIGHT;
 int PARTICLE_NEIGHBORS;
+
 int PARTICLES_PER_DIMENSION;
 float SPACING;
+
 float SUPPORT;
 float REST_DENSITY;
 float TIME_STEP;
 float STIFFNESS;
 float VISCOSITY;
+
+Eigen::Vector2f GRAVITY = Eigen::Vector2f(0.0f, -9.8f);
 
 void readParameters() {
 	std::ifstream file(fileName);
@@ -44,7 +48,7 @@ void readParameters() {
 		else if (parameterName == "particles") {
 			PARTICLES_PER_DIMENSION = std::stoi(parameterValue);
 		}
-		else if (parameterName == "time_step") {
+		else if (parameterName == "timestep") {
 			TIME_STEP = std::stod(parameterValue);
 		}
 		else if (parameterName == "stiffness") {
@@ -58,4 +62,3 @@ void readParameters() {
 		}
 	}
 }
-

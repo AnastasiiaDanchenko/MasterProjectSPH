@@ -1,113 +1,64 @@
 #include "..\headers\ComputationsSPH.h"
 
 // Loop through all particles and compute density
-void ComputeDensity() {
-    for (int i = 0; i < particles.size(); i++) {
-        // Skip boundary particles
-        if (particles[i].isFluid == false) {
+void ComputeDensityPressure() {
+
+    for (auto& p : particles) {
+        if (p.isFluid == false) { // Skip boundary particles
             continue;
         }
 
+        // Compute density
         float density = 0.0f;
-        for (int j = 0; j < particles[i].neighbors.size(); j++) {
-            float dX = particles[i].x - particles[i].neighbors[j]->x;
-            float dY = particles[i].y - particles[i].neighbors[j]->y;
-
-            float distance = std::sqrt(dX * dX + dY * dY);
-
-            density += particles[i].neighbors[j]->mass * CubicSplineKernel(distance, SPACING);
+        for (auto neighbor : p.neighbors) {
+            const Eigen::Vector2f r = p.position - neighbor->position;
+            density += neighbor->mass * CubicSplineKernel(r);
         }
+        p.density = density;
 
-        particles[i].density = density;
+        // Compute pressure
+        float pressure = STIFFNESS * (pow(p.density / REST_DENSITY, 7) - 1);
+        p.pressure = std::max(0.0f, pressure);
     }
 }
 
-// Loop through all particles and compute pressure
-void ComputePressure() {
-    for (int i = 0; i < particles.size(); i++) {
-        // Skip boundary particles
-        if (particles[i].isFluid == false) {
-            continue;
-        }
-        particles[i].pressure = std::max(0.0f, STIFFNESS * (particles[i].density / REST_DENSITY - 1));
-        if (particles[i].pressure != 0 && i != 136) {
-            int a = 0;
-        }
-    }
-}
-
-// Loop through all particles and compute acceleration
 void ComputeAcceleration() {
-    for (int i = 0; i < particles.size(); i++) {
-        // Skip boundary particles
-        if (particles[i].isFluid == false) {
-            continue;
+    // Gravity force
+    Eigen::Vector2f acceleration = GRAVITY;
+
+    for (auto& p : particles) {
+        if (p.isFluid == false) { // Skip boundary particles
+			continue;
+		}
+
+        for (auto neighbor : p.neighbors) {
+            if (neighbor == &p) { continue; } // Skip self
+            const Eigen::Vector2f r = p.position - neighbor->position; 
+            const float rSquaredNorm = r.squaredNorm();
+            const Eigen::Vector2f kernel = CubicSplineKernelGradient(r);
+
+            // Pressure force
+            acceleration += -neighbor->mass * (p.pressure / pow(p.density, 2) + neighbor->pressure / pow(neighbor->density, 2)) 
+                * kernel;
+
+            // Viscosity force
+            const Eigen::Vector2f v = p.velocity - neighbor->velocity;
+            acceleration += 2 * VISCOSITY * neighbor->mass * v / neighbor->density * r.dot(kernel) / 
+                (rSquaredNorm + 0.01f * pow(SPACING, 2));
         }
 
-        float aPressureX = 0.0f;
-        float aPressureY = 0.0f;
-        float aViscosityX = 0.0f;
-        float aViscosityY = 0.0f;
-
-        float aGravity = -9.81f;
-
-        for (int j = 0; j < particles[i].neighbors.size(); j++) {
-            // Compute distance between particles
-            float dX = particles[i].x - particles[i].neighbors[j]->x;
-            float dY = particles[i].y - particles[i].neighbors[j]->y;
-
-            float distance = std::sqrt(dX * dX + dY * dY);
-
-            float dVX = particles[i].vx - particles[i].neighbors[j]->vx;
-            float dVY = particles[i].vy - particles[i].neighbors[j]->vy;
-
-            float dV = std::sqrt(dVX * dVX + dVY * dVY);
-
-            // Compute acceleration
-            aViscosityX += particles[i].neighbors[j]->mass / particles[i].neighbors[j]->density *
-                dVX * dX / (dX * dX + 0.01 * SPACING * SPACING) * CubicSplineKernelGradient(distance, SPACING);
-
-            aViscosityY += particles[i].neighbors[j]->mass / particles[i].neighbors[j]->density *
-                dVY * dY / (dY * dY + 0.01 * SPACING * SPACING) * CubicSplineKernelGradient(distance, SPACING);
-
-            if (particles[i].neighbors[j]->isFluid == false) {
-                aPressureX += dX / distance * particles[i].neighbors[j]->mass * (2 * particles[i].pressure /
-                    (particles[i].density * particles[i].density)) * CubicSplineKernelGradient(distance, SPACING);
-                aPressureY += dY / distance * particles[i].neighbors[j]->mass * (2 * particles[i].pressure /
-                    (particles[i].density * particles[i].density)) * CubicSplineKernelGradient(distance, SPACING);
-            }
-            else {
-                if (distance == 0) {
-                    continue;
-                }
-                else {
-                    aPressureX += dX / distance * particles[i].neighbors[j]->mass * (particles[i].pressure /
-                        (particles[i].density * particles[i].density) + particles[i].neighbors[j]->pressure /
-                        (particles[i].neighbors[j]->density * particles[i].neighbors[j]->density)) *
-                        CubicSplineKernelGradient(distance, SPACING);
-                    aPressureY += dY / distance * particles[i].neighbors[j]->mass * (particles[i].pressure /
-                        (particles[i].density * particles[i].density) + particles[i].neighbors[j]->pressure /
-                        (particles[i].neighbors[j]->density * particles[i].neighbors[j]->density)) *
-                        CubicSplineKernelGradient(distance, SPACING);
-                }
-            }
-        }
-
-        // Update acceleration
-        particles[i].ax = -2 * VISCOSITY * aViscosityX + aPressureX;
-        particles[i].ay = -2 * VISCOSITY * aViscosityY + aPressureY + aGravity;
+        p.acceleration = acceleration;
     }
 }
 
 // Euler integration
 void UpdateParticles() {
-    for (int i = 0; i < particles.size(); i++) {
-        if (particles[i].isFluid == false) {
-            continue;
-        }
-        particles[i].vx += particles[i].ax * TIME_STEP;
-        particles[i].vy += particles[i].ay * TIME_STEP;
-        particles[i].x += particles[i].vx * TIME_STEP;
-        particles[i].y += particles[i].vy * TIME_STEP;
+    for (auto& p : particles) {
+        if (p.isFluid == false) { continue; } // Skip boundary particles
+		// Update velocity
+		p.velocity += TIME_STEP * p.acceleration;
+		// Update position
+		p.position += TIME_STEP * p.velocity;
     }
+    std::cout << particles[396].position << std::endl;
 }
