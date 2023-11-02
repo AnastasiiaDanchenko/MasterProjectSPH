@@ -70,13 +70,29 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\addan\miniconda39\Lib\site-packages\numpy\core\include;C:\Users\addan\miniconda39\include</IncludePath>
+    <LibraryPath>C:\Users\addan\miniconda39\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\addan\miniconda39\Lib\site-packages\numpy\core\include;C:\Users\addan\miniconda39\include</IncludePath>
+    <LibraryPath>C:\Users\addan\miniconda39\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\addan\miniconda39\Lib\site-packages\numpy\core\include;C:\Users\addan\miniconda39\include</IncludePath>
+    <LibraryPath>C:\Users\addan\miniconda39\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);C:\Users\addan\miniconda39\Lib\site-packages\numpy\core\include;C:\Users\addan\miniconda39\include</IncludePath>
+    <LibraryPath>C:\Users\addan\miniconda39\libs;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen;$(ProjectDir)Dependencies\matplotlib-cpp-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -93,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen;$(ProjectDir)Dependencies\matplotlib-cpp-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -110,7 +126,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen;$(ProjectDir)Dependencies\matplotlib-cpp-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -127,7 +143,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen;$(ProjectDir)Dependencies\matplotlib-cpp-master</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

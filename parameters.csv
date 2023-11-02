@@ -7,4 +7,4 @@ particles,25
 timestep,0.005
 stiffness,10000.0
 viscosity,10
-neighbors,550
+neighbors,600

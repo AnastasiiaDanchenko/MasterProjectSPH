@@ -3,6 +3,7 @@
 // Loop through all particles and compute density
 void ComputeDensityPressure() {
     for (auto& p : particles) {
+
         if (p.isFluid == false) { // Skip boundary particles
             continue;
         }

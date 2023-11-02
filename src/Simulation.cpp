@@ -1,7 +1,9 @@
 #include "..\headers\Simulation.h"
 
 void Simulation() {
-    NeighborSearch();
+    //NeighborSearch();
+    NSUniformGrid();
+
     ComputeDensityPressure();
     ComputeAcceleration();
     UpdateParticles();

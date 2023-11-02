@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "matplotlibcpp.h"
 
 #include "headers/CompileShaders.h"
 #include "headers/Simulation.h"
@@ -45,6 +46,7 @@ int main() {
     //initialize particles
     InitBoundaries();
     InitFluid();
+    UniformGrid();
 
     // Load the provided shader program
     ShaderProgramSource source = ParseShader("Shaders/particle.vert", "Shaders/particle.frag");
