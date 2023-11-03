@@ -57,8 +57,19 @@ int main() {
     // Get the uniform location for the model-view-projection (MVP) matrix
     unsigned int u_MVP = glGetUniformLocation(shader, "modelViewProjection");
 
+    int count = 0;
+
     // Main loop
     while (!glfwWindowShouldClose(window)) {
+
+        if (count == 0) {
+			UpdateVerletList();	
+        } else if (count == 10) { 
+            // Every 50 iteration - unstable
+            // Every 25 iteration - unrealistic
+            count = -1;
+        } count++; 
+
         // Update particles
         Simulation();
 
@@ -74,6 +85,7 @@ int main() {
         int isBoundaryLocation = glGetUniformLocation(shader, "isBoundary");
         // Pass an additional uniform to indicate if a particle is a neighbor
         int isNeighborLocation = glGetUniformLocation(shader, "isNeighbor");
+        int isCandidateLocation = glGetUniformLocation(shader, "isCandidate");
 
         for (const Particle& p : particles) {
             // Set the model matrix to translate the particle to its position
@@ -87,8 +99,9 @@ int main() {
             glUniform1i(isBoundaryLocation, p.isFluid ? 0 : 1);
 
             int isNeighbor = 0; // Initialize isNeighbor flag
+            int isCandidate = 0; // Initialize isCandidate flag
 
-            //check if particle is a neighbor of a fluid particle number 25 
+            //check if particle is a neighbor of a fluid particle
             for (int i = 0; i < particles[PARTICLE_NEIGHBORS].neighbors.size(); i++) {
                 if (&p == particles[PARTICLE_NEIGHBORS].neighbors[i]) {
                     if (&p == &particles[PARTICLE_NEIGHBORS]) { isNeighbor = 2; }
@@ -96,8 +109,16 @@ int main() {
                     break;
                 }
             }
-            // Now, set the isNeighbor attribute for the current particle
             glUniform1i(isNeighborLocation, isNeighbor);
+
+            //check if particle is a candidate of a fluid particle
+            for (int i = 0; i < particles[PARTICLE_NEIGHBORS].candidates.size(); i++) {
+                if (&p == particles[PARTICLE_NEIGHBORS].candidates[i]) {
+					isCandidate = 1; // Set isCandidate to 1 if it's a candidate
+					break;
+				}
+			}
+            glUniform1i(isCandidateLocation, isCandidate);
 
             int numSegments = 20; // Number of segments to approximate a circle
             float radius = 4.0f; // Radius of the circle

@@ -3,4 +3,5 @@
 
 void NeighborSearch();
 void NSUniformGrid();
+void UpdateVerletList();
 void NSVerletList();

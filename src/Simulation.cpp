@@ -2,7 +2,8 @@
 
 void Simulation() {
     //NeighborSearch();
-    NSUniformGrid();
+    //NSUniformGrid();
+    NSVerletList();
 
     ComputeDensityPressure();
     ComputeAcceleration();

@@ -44,7 +44,6 @@ void readParameters() {
 		}
 		else if (parameterName == "density") {
 			REST_DENSITY = std::stod(parameterValue);
-			AVG_DENSITY = REST_DENSITY;
 		}
 		else if (parameterName == "particles") {
 			PARTICLES_PER_DIMENSION = std::stoi(parameterValue);
