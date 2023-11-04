@@ -15,6 +15,8 @@ float VISCOSITY;
 
 Eigen::Vector2f GRAVITY = Eigen::Vector2f(0.0f, -9.8f);
 
+std::string NS_METHOD;
+
 void readParameters() {
 	std::ifstream file(fileName);
 
@@ -59,6 +61,15 @@ void readParameters() {
 		}
 		else if (parameterName == "neighbors") {
 			PARTICLE_NEIGHBORS = std::stoi(parameterValue);
+		} else if (parameterName == "method") {
+			const int method = std::stoi(parameterValue);
+			switch (method) {
+			case 0: NS_METHOD = "Quadratic search"; break;
+			case 1: NS_METHOD = "Verlet list"; break;
+			case 2: NS_METHOD = "Uniform grid"; break;
+			case 3: NS_METHOD = "Spatial hashing"; break;
+			}
+			std::cout << "Using " << NS_METHOD << " for neighbor search" << std::endl;
 		}
 	}
 }

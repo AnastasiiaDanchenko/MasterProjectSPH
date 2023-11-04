@@ -46,7 +46,9 @@ int main() {
     //initialize particles
     InitBoundaries();
     InitFluid();
-    UniformGrid();
+    if (NS_METHOD != "Verlet list" && NS_METHOD != "Quadratic search") {
+        UniformGrid();
+    }
 
     // Load the provided shader program
     ShaderProgramSource source = ParseShader("Shaders/particle.vert", "Shaders/particle.frag");
@@ -62,14 +64,12 @@ int main() {
     // Main loop
     while (!glfwWindowShouldClose(window)) {
 
-        if (count == 0) {
-			UpdateVerletList();	
-        } else if (count == 10) { 
-            // Every 50 iteration - unstable
-            // Every 25 iteration - unrealistic
-            count = -1;
-        } count++; 
-
+        if (NS_METHOD == "Verlet list") {
+            if (count == 0) { UpdateVerletList(); }
+            else if (count == 10) { count = -1; } 
+            count++;
+        }
+     
         // Update particles
         Simulation();
 
@@ -112,13 +112,17 @@ int main() {
             glUniform1i(isNeighborLocation, isNeighbor);
 
             //check if particle is a candidate of a fluid particle
-            for (int i = 0; i < particles[PARTICLE_NEIGHBORS].candidates.size(); i++) {
-                if (&p == particles[PARTICLE_NEIGHBORS].candidates[i]) {
-					isCandidate = 1; // Set isCandidate to 1 if it's a candidate
-					break;
-				}
-			}
-            glUniform1i(isCandidateLocation, isCandidate);
+            if (NS_METHOD == "Verlet list") {
+                for (int i = 0; i < particles[PARTICLE_NEIGHBORS].candidates.size(); i++) {
+                    if (&p == particles[PARTICLE_NEIGHBORS].candidates[i]) {
+                        isCandidate = 1; // Set isCandidate to 1 if it's a candidate
+                        break;
+                    }
+                }
+            } else if (NS_METHOD != "Quadratic search") {
+
+            }
+            glUniform1i(isCandidateLocation, isCandidate);        
 
             int numSegments = 20; // Number of segments to approximate a circle
             float radius = 4.0f; // Radius of the circle

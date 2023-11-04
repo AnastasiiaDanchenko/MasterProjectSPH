@@ -28,5 +28,6 @@ extern float TIME_STEP;
 extern float STIFFNESS;
 extern float VISCOSITY;
 extern Eigen::Vector2f GRAVITY;
+extern std::string NS_METHOD;
 
 void readParameters();
