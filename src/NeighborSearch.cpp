@@ -22,8 +22,9 @@ void NSUniformGrid() {
 
     for (int i = 0; i < particles.size(); i++) {
 		particles[i].neighbors.clear();
-		int x = std::floor(particles[i].position.x() / (2 * SPACING));
-		int y = std::floor(particles[i].position.y() / (2 * SPACING));
+        const int x = particles[i].getCellNumber().x();
+        const int y = particles[i].getCellNumber().y();
+
         for (int j = x - 1; j <= x + 1; j++) {
             for (int k = y - 1; k <= y + 1; k++) {
                 if (j < 0 || j >= GRID_WIDTH || k < 0 || k >= GRID_HEIGHT) {

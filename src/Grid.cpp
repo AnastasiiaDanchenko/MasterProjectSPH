@@ -40,15 +40,16 @@ void InitBoundaries() {
 void UniformGrid() {
     GRID_WIDTH = std::ceil(WINDOW_WIDTH / (4 * SPACING));
     GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / (4 * SPACING));
-    std::cout << GRID_WIDTH << " " << GRID_HEIGHT << std::endl;
+    std::cout << "Using uniform grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
+
     grid.resize(GRID_WIDTH);
     for (int i = 0; i < GRID_WIDTH; i++) {
 		grid[i].resize(GRID_HEIGHT);
 	}
 
     for (auto& p : particles) {
-        int x = std::floor(p.position.x() / (2 * SPACING));
-		int y = std::floor(p.position.y() / (2 * SPACING));
+        const int x = p.getCellNumber().x();
+        const int y = p.getCellNumber().y();
 		grid[x][y].push_back(&p);
     }
 }
@@ -62,8 +63,8 @@ void GridUpdate() {
     }
 
     for (auto& p : particles) {
-		int x = std::floor(p.position.x() / (2 * SPACING));
-		int y = std::floor(p.position.y() / (2 * SPACING));
+		const int x = p.getCellNumber().x();
+        const int y = p.getCellNumber().y();
 		grid[x][y].push_back(&p);
 	}
 }

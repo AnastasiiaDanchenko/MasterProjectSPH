@@ -19,4 +19,5 @@ public:
     std::vector<Particle*> candidates;
 
     Particle();
+    Eigen::Vector2i getCellNumber();
 };

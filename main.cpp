@@ -50,7 +50,6 @@ int main() {
         UniformGrid();
     }
 
-    // Load the provided shader program
     ShaderProgramSource source = ParseShader("Shaders/particle.vert", "Shaders/particle.frag");
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
 
@@ -77,13 +76,10 @@ int main() {
 
         // Set up the projection matrix
         glm::mat4 projection = glm::ortho(-1.0f, static_cast<float>(WINDOW_WIDTH), -1.0f, static_cast<float>(WINDOW_HEIGHT), -1.0f, 1.0f);
+        glUseProgram(shader);
 
-        // Render particles using the shader
-        glUseProgram(shader); // Ensure the correct shader is active
-
-        // Set a uniform to indicate whether a particle is a boundary
+        // Set uniforms to indicate whether a particle is a boundary or/and a neighbor
         int isBoundaryLocation = glGetUniformLocation(shader, "isBoundary");
-        // Pass an additional uniform to indicate if a particle is a neighbor
         int isNeighborLocation = glGetUniformLocation(shader, "isNeighbor");
         int isCandidateLocation = glGetUniformLocation(shader, "isCandidate");
 
@@ -98,14 +94,14 @@ int main() {
             glUniformMatrix4fv(u_MVP, 1, GL_FALSE, &modelViewProjection[0][0]);
             glUniform1i(isBoundaryLocation, p.isFluid ? 0 : 1);
 
-            int isNeighbor = 0; // Initialize isNeighbor flag
-            int isCandidate = 0; // Initialize isCandidate flag
+            int isNeighbor = 0; 
+            int isCandidate = 0;
 
             //check if particle is a neighbor of a fluid particle
             for (int i = 0; i < particles[PARTICLE_NEIGHBORS].neighbors.size(); i++) {
                 if (&p == particles[PARTICLE_NEIGHBORS].neighbors[i]) {
                     if (&p == &particles[PARTICLE_NEIGHBORS]) { isNeighbor = 2; }
-                    else { isNeighbor = 1; } // Set isNeighbor to 1 if it's a neighbor 
+                    else { isNeighbor = 1; }
                     break;
                 }
             }
@@ -115,20 +111,34 @@ int main() {
             if (NS_METHOD == "Verlet list") {
                 for (int i = 0; i < particles[PARTICLE_NEIGHBORS].candidates.size(); i++) {
                     if (&p == particles[PARTICLE_NEIGHBORS].candidates[i]) {
-                        isCandidate = 1; // Set isCandidate to 1 if it's a candidate
+                        isCandidate = 1;
                         break;
                     }
                 }
             } else if (NS_METHOD != "Quadratic search") {
-
+                const int x = particles[PARTICLE_NEIGHBORS].getCellNumber().x();
+                const int y = particles[PARTICLE_NEIGHBORS].getCellNumber().y();
+                for (int i = x - 1; i <= x + 1; i++) {
+                    for (int j = y - 1; j <= y + 1; j++) {
+                        if (i < 0 || i >= GRID_WIDTH || j < 0 || j >= GRID_HEIGHT) {
+							continue;
+						}
+                        for (auto& c : grid[i][j]) {
+                            if (&p == c) {
+                                isCandidate = 1;
+                                break;
+                            }
+                        }
+					}
+                }
             }
             glUniform1i(isCandidateLocation, isCandidate);        
 
-            int numSegments = 20; // Number of segments to approximate a circle
-            float radius = 4.0f; // Radius of the circle
+            int numSegments = 20; 
+            float radius = 4.0f;
 
             glBegin(GL_TRIANGLE_FAN);
-            glVertex2f(p.position.x(), p.position.y()); // Center of the circle
+            glVertex2f(p.position.x(), p.position.y());
 
             for (int i = 0; i <= numSegments; ++i) {
                 float angle = 2.0f * M_PI * static_cast<float>(i) / numSegments;
