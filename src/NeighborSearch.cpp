@@ -71,9 +71,27 @@ void NSVerletList() {
 }
 
 void NSHashTable() {
-    hashTable.UpdateHashTable();
+    HashTableUpdate();
+
     for (int i = 0; i < particles.size(); i++) {
 		particles[i].neighbors.clear();
-		particles[i].neighbors = hashTableP.Neighbors(particles[i].position);
+		
+        std::unordered_map<int, int> miniTable;
+        for (int m = -1; m <= 1; m++) {
+            for (int n = -1; n <= 1; n++) {
+				const int c = HashFunction(particles[i].position + Eigen::Vector2f(m * CELL_SIZE, n * CELL_SIZE));
+                if (miniTable[c] > 0) miniTable[c]++;
+                else miniTable.emplace(c, 1);
+			}
+        }
+
+        for (auto element : miniTable) {
+            for (int j = 0; j < hashTable[element.first].size(); j++) {
+                const Eigen::Vector2f r = particles[i].position - hashTable[element.first][j]->position;
+                if (r.squaredNorm() < pow(SUPPORT, 2)) {
+                    particles[i].neighbors.push_back(hashTable[element.first][j]);
+                }
+            }
+        }
 	}
 }

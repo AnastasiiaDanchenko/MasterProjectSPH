@@ -158,25 +158,23 @@
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\ComputationsSPH.cpp" />
-    <ClCompile Include="src\HashTable.cpp" />
     <ClCompile Include="src\Kernel.cpp" />
     <ClCompile Include="src\NeighborSearch.cpp" />
     <ClCompile Include="src\Parameters.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
-    <ClCompile Include="src\Table.cpp" />
+    <ClCompile Include="src\HashTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\CompileShaders.h" />
     <ClInclude Include="headers\ComputationsSPH.h" />
     <ClInclude Include="headers\Grid.h" />
-    <ClInclude Include="headers\HashTable.h" />
     <ClInclude Include="headers\Kernel.h" />
     <ClInclude Include="headers\NeighborSearch.h" />
     <ClInclude Include="headers\Parameters.h" />
     <ClInclude Include="headers\Particle.h" />
     <ClInclude Include="headers\Simulation.h" />
-    <ClInclude Include="headers\Table.h" />
+    <ClInclude Include="headers\HashTable.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Basic.shader" />

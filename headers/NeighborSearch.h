@@ -1,6 +1,6 @@
 #pragma once
 #include "Grid.h"
-#include "Table.h"
+#include "HashTable.h"
 
 void NeighborSearch();
 void NSUniformGrid();

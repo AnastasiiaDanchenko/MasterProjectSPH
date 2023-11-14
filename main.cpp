@@ -78,7 +78,7 @@ int main() {
         int isNeighborLocation = glGetUniformLocation(shader, "isNeighbor");
         int isCandidateLocation = glGetUniformLocation(shader, "isCandidate");
 
-        for (const Particle& p : particles) {
+        for (Particle& p : particles) {
             // Set the model matrix to translate the particle to its position
             glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(p.position.x(), p.position.y(), 0.0f));
 
