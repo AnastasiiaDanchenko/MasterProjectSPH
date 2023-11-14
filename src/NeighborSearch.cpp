@@ -71,5 +71,9 @@ void NSVerletList() {
 }
 
 void NSHashTable() {
-
+    hashTable.UpdateHashTable();
+    for (int i = 0; i < particles.size(); i++) {
+		particles[i].neighbors.clear();
+		particles[i].neighbors = hashTableP.Neighbors(particles[i].position);
+	}
 }

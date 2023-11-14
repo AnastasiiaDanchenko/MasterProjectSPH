@@ -8,4 +8,4 @@ timestep,0.005
 stiffness,10000.0
 viscosity,10
 neighbors,600
-method,2
+method,3

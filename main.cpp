@@ -43,12 +43,7 @@ int main() {
 
     glfwSetKeyCallback(window, keyCallback);
 
-    //initialize particles
-    InitBoundaries();
-    InitFluid();
-    if (NS_METHOD != "Verlet list" && NS_METHOD != "Quadratic search") {
-        UniformGrid();
-    }
+    Initialization();
 
     ShaderProgramSource source = ParseShader("Shaders/particle.vert", "Shaders/particle.frag");
     unsigned int shader = CreateShader(source.VertexSource, source.FragmentSource);
@@ -115,7 +110,7 @@ int main() {
                         break;
                     }
                 }
-            } else if (NS_METHOD != "Quadratic search") {
+            } else if (NS_METHOD == "Uniform grid") {
                 const int x = particles[PARTICLE_NEIGHBORS].getCellNumber().x();
                 const int y = particles[PARTICLE_NEIGHBORS].getCellNumber().y();
                 for (int i = x - 1; i <= x + 1; i++) {
