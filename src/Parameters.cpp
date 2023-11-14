@@ -16,6 +16,7 @@ float VISCOSITY;
 Eigen::Vector2f GRAVITY = Eigen::Vector2f(0.0f, -9.8f);
 
 std::string NS_METHOD;
+std::string SIMULATION;
 
 void readParameters() {
 	std::ifstream file(fileName);
@@ -70,6 +71,15 @@ void readParameters() {
 			case 3: NS_METHOD = "Spatial hashing"; break;
 			}
 			std::cout << "Using " << NS_METHOD << " for neighbor search" << std::endl;
+		}
+		else if (parameterName == "simulation") {
+			const int simulation = std::stoi(parameterValue);
+			switch (simulation) {
+			case 0: SIMULATION = "Initial"; WINDOW_HEIGHT /= 2; WINDOW_WIDTH /= 2.5; break;
+			case 1: SIMULATION = "Dam break"; PARTICLES_PER_DIMENSION *= 2; break;
+			case 2: SIMULATION = "Complex boundaries"; break;
+			}
+			std::cout << "Using " << SIMULATION << " simulation" << std::endl;
 		}
 	}
 }

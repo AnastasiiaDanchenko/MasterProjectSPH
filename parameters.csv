@@ -1,5 +1,5 @@
-window_width,500
-window_hight,400
+window_width,1200
+window_hight,800
 spacing,5.
 support,2.1
 density,1
@@ -9,3 +9,4 @@ stiffness,10000.0
 viscosity,10
 neighbors,600
 method,3
+simulation,2
