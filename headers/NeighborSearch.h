@@ -2,7 +2,7 @@
 #include "Grid.h"
 #include "HashTable.h"
 
-void NeighborSearch();
+void QuadraticSearch();
 void NSUniformGrid();
 void UpdateVerletList();
 void NSVerletList();

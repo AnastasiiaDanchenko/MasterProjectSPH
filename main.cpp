@@ -155,17 +155,17 @@ void Visualization() {
     glfwTerminate();
 }
 
-void Analysis() {
+void PerformanceAnalysis() {
     std::vector<std::string> NS_METHODS = { "Quadratic search", "Verlet list", "Uniform grid", "Spatial hashing", "Index Sorting" };
-    //std::vector<std::string> NS_METHODS = { "Verlet list" };
     SIMULATION = "Initial";
 
     std::vector<std::vector<double>> executionTimes;  // Matrix to store execution times for each method
     std::vector<int> nbParticles;
     std::vector<std::vector<int>> nbNeighbors;
+    int steps = 1000;
 
-    for (int i = 1; i <= 10; i++) {
-        std::cout << "Number of particles: " << PARTICLES_PER_DIMENSION * i * PARTICLES_PER_DIMENSION << std::endl;
+    for (int i = 4; i <= 6; i += 2) {
+        std::cout << "Number of fluid particles: " << PARTICLES_PER_DIMENSION * i * PARTICLES_PER_DIMENSION << std::endl;
         std::vector<double> timesForCurrentParticles;
         std::vector<int> neighborsForCurrentParticles;
 
@@ -176,27 +176,18 @@ void Analysis() {
             int count = 0;
 
             auto start = std::chrono::high_resolution_clock::now();
-            for (int j = 0; j < 1000; j++) {
+            for (int j = 0; j < steps; j++) {
                 if (NS_METHOD == "Verlet list") {
                     if (count == 0) { UpdateVerletList(); }
                     else if (count == 10) { count = -1; }
                     count++;
                 }
-                Simulation();
+                NeighborSearch();
             }
             auto end = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> duration = end - start;
-            timesForCurrentParticles.push_back(duration.count());
-
-            for (auto& p : particles) {
-				neighbors += p.neighbors.size();
-			}
-
-            particles.clear();
-            neighborsForCurrentParticles.push_back(neighbors);
+            timesForCurrentParticles.push_back(duration.count() / steps);
         }
-
-        nbNeighbors.push_back(neighborsForCurrentParticles);
 
         executionTimes.push_back(timesForCurrentParticles);
         WINDOW_WIDTH += PARTICLES_PER_DIMENSION * SUPPORT;
@@ -214,27 +205,51 @@ void Analysis() {
         plt::named_plot(NS_METHODS[i], nbParticles, methodTimes);
     }
 
-    plt::title("Execution time");
+    plt::title("Performance analysis: Average computation time per simulation step");
     plt::xlabel("Number of particles");
     plt::ylabel("Time [s]");
     plt::legend();
     plt::show();
     plt::close();
+}
 
-    // Compare number of neighbors for each particle to the ground truth - Quadratic search
-    /*plt::figure();
-    for (int i = 1; i < nbNeighbors.size(); ++i) {
-        std::vector<double> neighbors;
-        for (int j = 0; j < nbNeighbors[i].size(); ++j) {
-			neighbors.push_back(nbNeighbors[i][j]);
+void NeighborAnalysis() {
+    std::vector<std::string> NS_METHODS = { "Quadratic search", "Verlet list", "Uniform grid", "Spatial hashing", "Index Sorting" };
+    SIMULATION = "Initial";
+
+    std::vector<int> nbParticles;
+    std::vector<int> nbNeighbors;
+    int steps = 1000;
+
+    for (auto method : NS_METHODS) {
+        int neighbors = 0;
+        NS_METHOD = method;
+        Initialization(4); // check for a big scene
+        int count = 0;
+
+        for (int j = 0; j < steps; j++) {
+            if (NS_METHOD == "Verlet list") {
+                if (count == 0) { UpdateVerletList(); }
+                else if (count == 10) { count = -1; }
+                count++;
+            }
+            NeighborSearch();
+        }
+
+        for (auto& p : particles) {
+			neighbors += p.neighbors.size();
 		}
-		plt::plot(nbParticles, neighbors);
-		plt::named_plot(NS_METHODS[i], nbParticles, neighbors);
+        nbNeighbors.push_back(neighbors);
+        particles.clear();
+    }
+
+    // Write statistics into console
+    std::cout << "Total number of neighbors for " << NS_METHODS[0] << ": " << nbNeighbors[0] << std::endl << std::endl;
+    for (size_t i = 0; i < NS_METHODS.size(); ++i) {
+        std::cout << "Total number of neighbors for " << NS_METHODS[i] << ": " << nbNeighbors[i] << std::endl;
+        std::cout << "Number of false positives for " << NS_METHODS[i] << ": " << nbNeighbors[i] - nbNeighbors[0] << std::endl << std::endl;
 	}
-	plt::title("Total number of neighbors");
-	plt::xlabel("Number of particles");
-	plt::ylabel("Number of neighbors");
-	plt::show();*/
+    
 }
 
 int main() {
@@ -245,7 +260,8 @@ int main() {
         Initialization(1);
         Visualization();
 	} else {
-        Analysis();
+        //PerformanceAnalysis();
+        NeighborAnalysis();
     }
 
     return 0;

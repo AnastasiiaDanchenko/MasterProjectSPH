@@ -8,6 +8,6 @@ timestep,0.005
 stiffness,10000.0
 viscosity,10
 neighbors,902
-method,4
+method,0
 simulation,0
-visualization,1
+visualization,0

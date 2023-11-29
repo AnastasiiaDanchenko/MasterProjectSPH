@@ -1,16 +1,19 @@
 #include "..\headers\Simulation.h"
 
-void Simulation() {
-    if (NS_METHOD == "Quadratic search") { NeighborSearch(); }
-    else if (NS_METHOD == "Verlet list") { NSVerletList(); } 
+void NeighborSearch() {
+    if (NS_METHOD == "Quadratic search") { QuadraticSearch(); }
+    else if (NS_METHOD == "Verlet list") { NSVerletList(); }
     else if (NS_METHOD == "Uniform grid") { NSUniformGrid(); }
     else if (NS_METHOD == "Spatial hashing") { NSHashTable(); }
     else if (NS_METHOD == "Index Sorting") { NSSorting(); }
     else {
-		std::cout << "Invalid neighbor search method!" << std::endl;
-		std::exit(1);
-	}
+        std::cout << "Invalid neighbor search method!" << std::endl;
+        std::exit(1);
+    }
+}
 
+void Simulation() {
+    NeighborSearch();
     ComputeDensityPressure();
     ComputeAcceleration();
     UpdateParticles();

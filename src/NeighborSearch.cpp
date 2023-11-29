@@ -1,7 +1,7 @@
 #include "..\headers\NeighborSearch.h"
 
 // Standard Neighbor search
-void NeighborSearch() {
+void QuadraticSearch() {
     for (int i = 0; i < particles.size(); i++) {
         particles[i].neighbors.clear();
 
