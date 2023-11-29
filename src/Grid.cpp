@@ -2,13 +2,15 @@
 
 std::vector<Particle> particles;
 std::vector<std::vector<std::list<Particle*>>> grid;
+std::vector<Particle*> linearGrid;
+
 int GRID_WIDTH;
 int GRID_HEIGHT;
 
 // Initialize uniformed grid of fluid particles
-void InitFluid() {
+void InitFluid(const int l) {
     if (SIMULATION == "Initial") {
-        for (int i = 0; i < PARTICLES_PER_DIMENSION; i++) {
+        for (int i = 0; i < PARTICLES_PER_DIMENSION * l; i++) {
             for (int j = 0; j < PARTICLES_PER_DIMENSION; j++) {
                 Particle p;
 
@@ -100,8 +102,8 @@ void InitBoundaries() {
 }
 
 void UniformGrid() {
-    GRID_WIDTH = std::ceil(WINDOW_WIDTH / (2 * SUPPORT));
-    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / (2 * SUPPORT));
+    GRID_WIDTH = std::ceil(WINDOW_WIDTH / (2 * SPACING));
+    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / (2 * SPACING));
     std::cout << "Using uniform grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
 
     grid.resize(GRID_WIDTH);
@@ -121,6 +123,44 @@ void GridUpdate() {
     for (auto& p : particles) {
 		const int x = p.getCellNumber().x();
         const int y = p.getCellNumber().y();
+        if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
+			continue;
+		}
 		grid[x][y].push_back(&p);
 	}
+}
+
+void LinearGrid() {
+    GRID_WIDTH = std::ceil(WINDOW_WIDTH / (2 * SPACING));
+    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / (2 * SPACING));
+    std::cout << "Using uniform grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
+
+    linearGrid.resize(GRID_WIDTH * GRID_HEIGHT);
+}
+
+int LinearGridCellNumber(const int x, const int y) {
+    int k = (int)(x / (2 * SPACING));
+    int l = (int)(y / (2 * SPACING));
+    return k + l * GRID_WIDTH;
+}
+
+void Sorting() {
+    std::sort(particles.begin(), particles.end(), [](const Particle& a, const Particle& b) {
+		return LinearGridCellNumber(a.position.x(), a.position.y()) < LinearGridCellNumber(b.position.x(), b.position.y());
+	});
+
+    linearGrid.clear();
+    linearGrid.resize(GRID_WIDTH * GRID_HEIGHT, nullptr);
+
+    // store the reference to the first particle in each cell in the linear grid
+    for (auto& p : particles) {
+        int cellNumber = LinearGridCellNumber(p.position.x(), p.position.y());
+        if (cellNumber < 0 || cellNumber >= GRID_WIDTH * GRID_HEIGHT) {
+            // Particle is outside the grid, assign it to the cell -1
+            cellNumber = -1;
+        }
+        if (linearGrid[cellNumber] == nullptr) {
+            linearGrid[cellNumber] = &p;
+        }
+    }
 }

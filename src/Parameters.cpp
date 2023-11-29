@@ -17,6 +17,7 @@ Eigen::Vector2f GRAVITY = Eigen::Vector2f(0.0f, -9.8f);
 
 std::string NS_METHOD;
 std::string SIMULATION;
+bool VISUALIZATION;
 
 void readParameters() {
 	std::ifstream file(fileName);
@@ -62,15 +63,16 @@ void readParameters() {
 		}
 		else if (parameterName == "neighbors") {
 			PARTICLE_NEIGHBORS = std::stoi(parameterValue);
-		} else if (parameterName == "method") {
+		} 
+		else if (parameterName == "method") {
 			const int method = std::stoi(parameterValue);
 			switch (method) {
 			case 0: NS_METHOD = "Quadratic search"; break;
 			case 1: NS_METHOD = "Verlet list"; break;
 			case 2: NS_METHOD = "Uniform grid"; break;
 			case 3: NS_METHOD = "Spatial hashing"; break;
+			case 4: NS_METHOD = "Index Sorting"; break;
 			}
-			std::cout << "Using " << NS_METHOD << " for neighbor search" << std::endl;
 		}
 		else if (parameterName == "simulation") {
 			const int simulation = std::stoi(parameterValue);
@@ -79,7 +81,9 @@ void readParameters() {
 			case 1: SIMULATION = "Dam break"; PARTICLES_PER_DIMENSION *= 2; break;
 			case 2: SIMULATION = "Complex boundaries"; break;
 			}
-			std::cout << "Using " << SIMULATION << " simulation" << std::endl;
+		}
+		else if (parameterName == "visualization") {
+			VISUALIZATION = std::stoi(parameterValue);
 		}
 	}
 }

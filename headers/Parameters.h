@@ -31,5 +31,6 @@ extern Eigen::Vector2f GRAVITY;
 
 extern std::string NS_METHOD;
 extern std::string SIMULATION;
+extern bool VISUALIZATION;
 
 void readParameters();

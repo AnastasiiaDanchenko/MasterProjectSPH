@@ -47,4 +47,12 @@ void HashTableUpdate() {
         int c = HashFunction(p.position);
         hashTable[c].push_back(&p);
     }
+
+    if (NS_METHOD == "Spatial hashing") {
+        hashTable.clear();
+        for (auto& p : particles) {
+            int c = HashFunction(p.position);
+            hashTable[c].push_back(&p);
+        }
+	}
 }

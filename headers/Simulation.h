@@ -2,5 +2,5 @@
 #include "ComputationsSPH.h"
 #include "NeighborSearch.h"
 
-void Initialization();
+void Initialization(const int length);
 void Simulation();

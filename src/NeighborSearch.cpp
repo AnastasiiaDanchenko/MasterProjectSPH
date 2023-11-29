@@ -95,3 +95,30 @@ void NSHashTable() {
         }
 	}
 }
+
+void NSSorting() {
+    Sorting();
+    for (int i = 0; i < particles.size(); i++) {
+		particles[i].neighbors.clear();
+        
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                int c = LinearGridCellNumber(particles[i].position.x() + dx * 2 * SPACING, particles[i].position.y() + dy * 2 * SPACING);
+                if (c < 0 || c >= GRID_WIDTH * GRID_HEIGHT) { continue; }
+
+                auto firstParticle = linearGrid[c];
+                if (firstParticle == nullptr) { continue; }
+                
+                int c_n = LinearGridCellNumber(firstParticle->position.x(), firstParticle->position.y());
+                while (c_n == c) {  
+					const Eigen::Vector2f r = particles[i].position - firstParticle->position;
+                    if (r.squaredNorm() < pow(SUPPORT, 2)) {
+						particles[i].neighbors.push_back(firstParticle);
+					}
+					firstParticle++;
+					c_n = LinearGridCellNumber(firstParticle->position.x(), firstParticle->position.y());
+				}
+            }
+        }
+	}
+}
