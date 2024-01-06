@@ -2,7 +2,6 @@
 
 std::unordered_map<int, std::vector<Particle*>> hashTable;
 int HASH_TABLE_SIZE;
-float CELL_SIZE;
 
 int HashTableSize() {
     int tableSize = 2 * particles.size();
@@ -26,8 +25,6 @@ int HashTableSize() {
 
 void HashTable() {
 	HASH_TABLE_SIZE = HashTableSize();
-    CELL_SIZE = 2 * SPACING;
-
     hashTable.reserve(HASH_TABLE_SIZE);
 }
 
@@ -47,12 +44,4 @@ void HashTableUpdate() {
         int c = HashFunction(p.position);
         hashTable[c].push_back(&p);
     }
-
-    if (NS_METHOD == "Spatial hashing") {
-        hashTable.clear();
-        for (auto& p : particles) {
-            int c = HashFunction(p.position);
-            hashTable[c].push_back(&p);
-        }
-	}
 }

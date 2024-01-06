@@ -20,6 +20,7 @@ extern int PARTICLE_NEIGHBORS; // Visualized neighbors for a given particle
 // Initial grid parameters
 extern int PARTICLES_PER_DIMENSION;
 extern float SPACING;
+extern int CELL_SIZE;
 
 // SPH parameters
 extern float SUPPORT;

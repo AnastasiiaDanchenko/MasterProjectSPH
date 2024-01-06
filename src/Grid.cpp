@@ -102,8 +102,8 @@ void InitBoundaries() {
 }
 
 void UniformGrid() {
-    GRID_WIDTH = std::ceil(WINDOW_WIDTH / (2 * SPACING));
-    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / (2 * SPACING));
+    GRID_WIDTH = std::ceil(WINDOW_WIDTH / CELL_SIZE);
+    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / CELL_SIZE);
     std::cout << "Using uniform grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
 
     grid.resize(GRID_WIDTH);
@@ -131,16 +131,16 @@ void GridUpdate() {
 }
 
 void LinearGrid() {
-    GRID_WIDTH = std::ceil(WINDOW_WIDTH / (2 * SPACING));
-    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / (2 * SPACING));
+    GRID_WIDTH = std::ceil(WINDOW_WIDTH / CELL_SIZE);
+    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / CELL_SIZE);
     std::cout << "Using uniform grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
 
     linearGrid.resize(GRID_WIDTH * GRID_HEIGHT);
 }
 
 int LinearGridCellNumber(const int x, const int y) {
-    int k = (int)(x / (2 * SPACING));
-    int l = (int)(y / (2 * SPACING));
+    int k = (int)(x / CELL_SIZE);
+    int l = (int)(y / CELL_SIZE);
     return k + l * GRID_WIDTH;
 }
 

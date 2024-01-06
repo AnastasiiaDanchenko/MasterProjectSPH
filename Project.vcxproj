@@ -160,10 +160,12 @@
     <ClCompile Include="src\ComputationsSPH.cpp" />
     <ClCompile Include="src\Kernel.cpp" />
     <ClCompile Include="src\NeighborSearch.cpp" />
+    <ClCompile Include="src\Octree.cpp" />
     <ClCompile Include="src\Parameters.cpp" />
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Simulation.cpp" />
     <ClCompile Include="src\HashTable.cpp" />
+    <ClCompile Include="src\Visualization.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\CompileShaders.h" />
@@ -171,10 +173,12 @@
     <ClInclude Include="headers\Grid.h" />
     <ClInclude Include="headers\Kernel.h" />
     <ClInclude Include="headers\NeighborSearch.h" />
+    <ClInclude Include="headers\Octree.h" />
     <ClInclude Include="headers\Parameters.h" />
     <ClInclude Include="headers\Particle.h" />
     <ClInclude Include="headers\Simulation.h" />
     <ClInclude Include="headers\HashTable.h" />
+    <ClInclude Include="headers\Visualization.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\Basic.shader" />
@@ -182,6 +186,8 @@
     <None Include="Shaders\particle.frag" />
     <None Include="Shaders\ParticleShader.geom" />
     <None Include="Shaders\particle.vert" />
+    <None Include="Shaders\vbo.frag" />
+    <None Include="Shaders\vbo.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

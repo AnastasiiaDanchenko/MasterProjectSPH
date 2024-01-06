@@ -11,7 +11,7 @@ Particle::Particle() :
     isFluid(true) {}
 
 Eigen::Vector2i Particle::getCellNumber() {
-	int x = std::floor(position.x() / (2 * SPACING));
-	int y = std::floor(position.y() / (2 * SPACING));
+	int x = std::floor(position.x() / CELL_SIZE);
+	int y = std::floor(position.y() / CELL_SIZE);
 	return Eigen::Vector2i(x, y);
 }

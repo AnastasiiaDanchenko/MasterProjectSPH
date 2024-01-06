@@ -6,6 +6,7 @@ int PARTICLE_NEIGHBORS;
 
 int PARTICLES_PER_DIMENSION;
 float SPACING;
+int CELL_SIZE;
 
 float SUPPORT;
 float REST_DENSITY;
@@ -42,6 +43,7 @@ void readParameters() {
 		}
 		else if (parameterName == "spacing") {
 			SPACING = std::stod(parameterValue);
+			CELL_SIZE = 2 * SPACING;
 		}
 		else if (parameterName == "support") {
 			SUPPORT = SPACING * std::stod(parameterValue);
@@ -72,6 +74,7 @@ void readParameters() {
 			case 2: NS_METHOD = "Uniform grid"; break;
 			case 3: NS_METHOD = "Spatial hashing"; break;
 			case 4: NS_METHOD = "Index Sorting"; break;
+			case 5: NS_METHOD = "Octree"; break;
 			}
 		}
 		else if (parameterName == "simulation") {

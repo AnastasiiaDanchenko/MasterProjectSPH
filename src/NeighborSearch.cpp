@@ -75,7 +75,7 @@ void NSHashTable() {
 
     for (int i = 0; i < particles.size(); i++) {
 		particles[i].neighbors.clear();
-		
+        
         std::unordered_map<int, int> miniTable;
         for (int m = -1; m <= 1; m++) {
             for (int n = -1; n <= 1; n++) {
@@ -120,5 +120,12 @@ void NSSorting() {
 				}
             }
         }
+	}
+}
+
+void NSOctree() {
+    for (int i = 0; i < particles.size(); i++) {
+		particles[i].neighbors.clear();
+		//octree.queryNeighbors(&particles[i], SUPPORT, particles[i].neighbors);
 	}
 }
