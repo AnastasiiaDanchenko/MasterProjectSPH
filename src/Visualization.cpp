@@ -1,5 +1,9 @@
 #include "../headers/Visualization.h"
 
+const int IMGUI_WINDOW_WIDTH = 300;
+
+bool isSimulationRunning = true;
+
 typedef enum {
     POSITION_ATTRIBUTE = 0,
     COLOR_ATTRIBUTE,
@@ -25,14 +29,6 @@ void keyCallbackVBO(GLFWwindow* window, int key, int scancode, int action, int m
             glfwSetWindowShouldClose(window, GL_TRUE);
         }
     }
-}
-
-// GLAPIENTRY specifies a calling convention that tells the compiler to modify 
-// the way the function's arguments are passed.
-void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-    const GLchar* message, const void* userParam) {
-    std::cerr << "GL CALLBACK: " << (type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "") <<
-        "type = 0x" << type << ", severity = 0x" << severity << ", message = " << message << std::endl;
 }
 
 void InitializeVBO() {
@@ -193,7 +189,7 @@ void Visualize() {
     glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE);
 
     // Create a window
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "SPH solver in 2D", nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(IMGUI_WINDOW_WIDTH + WINDOW_WIDTH, WINDOW_HEIGHT, "SPH solver in 2D", nullptr, nullptr);
     if (!window) {
 		std::cerr << "Failed to create GLFW window!" << std::endl;
 		glfwTerminate();
@@ -216,14 +212,11 @@ void Visualize() {
 		exit(EXIT_FAILURE);
 	}
 
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(MessageCallback, 0);
-
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Set the background color
-    glClearColor(.2f, .2f, .2f, 1.0f);
+    glClearColor(.05f, .05f, .05f, 1.0f);
 
     // Copile and link the shaders
     ShaderProgramSource source = ParseShader("Shaders/vbo.vert", "Shaders/vbo.frag");
@@ -240,29 +233,69 @@ void Visualize() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
     // event loop
     while (!glfwWindowShouldClose(window)) {
-        Simulation();
+
+        if (isSimulationRunning) { Simulation(); }
 
         clearBuffers();
+
+        // Render ImGui
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        glViewport(IMGUI_WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
         for (auto& p : particles) {
-            if (p.isFluid) { pushVertex(p.position.x(), p.position.y(), 0.2f, 0.5f, 1.0f);	}
-            else {	pushVertex(p.position.x(), p.position.y(), 1.0f, 0.5f, 0.5f); }
-		}
+            if (p.isFluid) { pushVertex(p.position.x(), p.position.y(), 0.2f, 0.5f, 1.0f); }
+            else { pushVertex(p.position.x(), p.position.y(), 1.0f, 0.5f, 0.5f); }
+        }
         syncBuffers();
 
-		glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         glPointSize(7.0); // Set the point size
         glDrawArraysInstanced(GL_POINTS, 0, 1, verticesCount);
 
-		glfwSwapBuffers(window);
-		glfwPollEvents();
+        //set fixed position for imgui window
+        ImGui::SetNextWindowPos(ImVec2(0, 0));
+        ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, WINDOW_HEIGHT / 5));
+
+        ImGui::Begin("Simulation Parameters");
+        ImGui::Text("Number of particles: %d", particles.size());
+        ImGui::Text("Time step: %f", TIME_STEP);
+        ImGui::Text("Stiffness coefficient: %f", STIFFNESS);
+        ImGui::Text("Viscosity coefficient: %f", VISCOSITY);
+        ImGui::End();
+
+        ImGui::SetNextWindowPos(ImVec2(0, WINDOW_HEIGHT / 5));
+        ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, WINDOW_HEIGHT / 5));
+
+        ImGui::Begin("Simulation Controls");
+        if (ImGui::Button("Start")) {  isSimulationRunning = true; }
+        ImGui::SameLine();
+        if (ImGui::Button("Pause")) { isSimulationRunning = false; }
+        ImGui::SameLine();
+        if (ImGui::Button("Reset")) { 
+            particles.clear();
+            Initialization(1);
+		}
+        ImGui::End();
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        glfwSwapBuffers(window);
+        glfwPollEvents();
 	}
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
 
     glDeleteProgram(shader);
 }
