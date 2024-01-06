@@ -236,6 +236,14 @@ void Visualize() {
     // Initialize the buffers
     initBuffers();
 
+    // Initialize ImGui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGui::StyleColorsDark();
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
+
     // event loop
     while (!glfwWindowShouldClose(window)) {
         Simulation();
@@ -249,7 +257,7 @@ void Visualize() {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
-        glPointSize(7.0);
+        glPointSize(7.0); // Set the point size
         glDrawArraysInstanced(GL_POINTS, 0, 1, verticesCount);
 
 		glfwSwapBuffers(window);

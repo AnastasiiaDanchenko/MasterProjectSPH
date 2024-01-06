@@ -3,6 +3,7 @@
 std::vector<Particle> particles;
 std::vector<std::vector<std::list<Particle*>>> grid;
 std::vector<Particle*> linearGrid;
+std::vector<std::vector<Particle>> mortonGridCells;
 
 int GRID_WIDTH;
 int GRID_HEIGHT;
@@ -163,4 +164,63 @@ void Sorting() {
             linearGrid[cellNumber] = &p;
         }
     }
+}
+
+constexpr int BITS_PER_DIMENSION = 16; // Assuming 16 bits for each dimension
+
+struct MortonKey {
+    int key;
+    int index;
+
+    // Custom comparison function for sorting based on Morton code
+    bool operator<(const MortonKey& other) const {
+        return key < other.key;
+    }
+};
+
+// Compute Morton code for a 2D point (x, y)
+int MortonCode(const float x, const float y) {
+    int xi = static_cast<int>(x * (1 << BITS_PER_DIMENSION));
+    int yi = static_cast<int>(y * (1 << BITS_PER_DIMENSION));
+
+    int mortonCode = 0;
+    for (int i = 0; i < BITS_PER_DIMENSION; ++i) {
+        mortonCode |= ((xi & (1 << i)) << (2 * i)) | ((yi & (1 << i)) << (2 * i + 1));
+    }
+
+    return abs(mortonCode);
+}
+
+// Function to compute Morton key for a particle
+MortonKey ComputeMortonKey(const Particle& particle) {
+    int mortonCode = MortonCode(particle.position.x(), particle.position.y());
+    return { mortonCode, &particle - &particles[0] };
+}
+
+void MortonGrid() {
+    GRID_WIDTH = std::ceil(WINDOW_WIDTH / CELL_SIZE);
+    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / CELL_SIZE);
+    std::cout << "Using Morton grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
+
+    mortonGridCells.resize(GRID_WIDTH * GRID_HEIGHT);
+}
+
+void MortonSorting() {
+    // Compute Morton keys for all particles
+    std::vector<MortonKey> mortonKeys(particles.size());
+    for (size_t i = 0; i < particles.size(); ++i) {
+        mortonKeys[i] = ComputeMortonKey(particles[i]);
+    }
+
+    // Sort particles based on Morton keys
+    std::sort(mortonKeys.begin(), mortonKeys.end());
+
+    // Rearrange particles based on sorted Morton keys
+    std::vector<Particle> sortedParticles(particles.size());
+    for (size_t i = 0; i < mortonKeys.size(); ++i) {
+        sortedParticles[i] = particles[mortonKeys[i].index];
+    }
+
+    // Update the original particles vector with the sorted particles
+    particles = std::move(sortedParticles);
 }

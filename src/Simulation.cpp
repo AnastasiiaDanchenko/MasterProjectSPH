@@ -31,7 +31,8 @@ void Initialization(const int l) {
         HashTable();
     }
     else if (NS_METHOD == "Index Sorting") {
-        LinearGrid();
+        //LinearGrid();
+        MortonGrid();
 	}
     else if (NS_METHOD == "Octree") {
         Octree octree(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 10);

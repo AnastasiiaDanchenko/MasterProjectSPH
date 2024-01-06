@@ -109,7 +109,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen;$(ProjectDir)Dependencies\matplotlib-cpp-master</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Dependencies\GLEW\include;$(ProjectDir)Dependencies\GLFW\include;$(ProjectDir)Dependencies\eigen-3.4.0;$(ProjectDir)Dependencies\glm-master;%(AdditionalIncludeDirectories);$(ProjectDir)Dependencies\eigen-3.4.0\Eigen;$(ProjectDir)Dependencies\matplotlib-cpp-master;$(ProjectDir)Dependencies\imgui</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -155,6 +155,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Dependencies\imgui\imgui.cpp" />
+    <ClCompile Include="Dependencies\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Dependencies\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Dependencies\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Dependencies\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Dependencies\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Dependencies\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Analysis.cpp" />
     <ClCompile Include="src\Grid.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="src\ComputationsSPH.cpp" />
@@ -168,6 +176,16 @@
     <ClCompile Include="src\Visualization.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Dependencies\imgui\imconfig.h" />
+    <ClInclude Include="Dependencies\imgui\imgui.h" />
+    <ClInclude Include="Dependencies\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Dependencies\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Dependencies\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Dependencies\imgui\imgui_internal.h" />
+    <ClInclude Include="Dependencies\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Dependencies\imgui\imstb_textedit.h" />
+    <ClInclude Include="Dependencies\imgui\imstb_truetype.h" />
+    <ClInclude Include="headers\Analysis.h" />
     <ClInclude Include="headers\CompileShaders.h" />
     <ClInclude Include="headers\ComputationsSPH.h" />
     <ClInclude Include="headers\Grid.h" />
