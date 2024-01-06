@@ -176,6 +176,15 @@ void clearBuffers() {
 	verticesCount = 0;
 }
 
+void NSMethodButton(const char* label, const std::string& method) {
+    if (ImGui::Button(label)) {
+        particles.clear();
+        NS_METHOD = method;
+        Initialization(1);
+    }
+    ImGui::SameLine();
+}
+
 void Visualize() {
     // Initialize GLFW
     if (!glfwInit()) {
@@ -236,8 +245,16 @@ void Visualize() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330");
 
+    // step count for Verlet list
+    int count = 0;
+
     // event loop
     while (!glfwWindowShouldClose(window)) {
+        if (NS_METHOD == "Verlet list") {
+			if (count == 0) { UpdateVerletList(); }
+			else if (count == 10) { count = -1; }
+			count++;
+		}
 
         if (isSimulationRunning) { Simulation(); }
 
@@ -263,27 +280,34 @@ void Visualize() {
 
         //set fixed position for imgui window
         ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, WINDOW_HEIGHT / 5));
+        ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, WINDOW_HEIGHT / 2));
 
         ImGui::Begin("Simulation Parameters");
         ImGui::Text("Number of particles: %d", particles.size());
-        ImGui::Text("Time step: %f", TIME_STEP);
-        ImGui::Text("Stiffness coefficient: %f", STIFFNESS);
-        ImGui::Text("Viscosity coefficient: %f", VISCOSITY);
+        ImGui::Text("\nTime step:"); ImGui::SliderFloat("##TimeStep", &TIME_STEP, 0.0001f, 0.01f);
+        ImGui::Text("\nStiffness coefficient:"); ImGui::SliderFloat("##Stiffness", &STIFFNESS, 1000.0f, 100000.0f);
+        ImGui::Text("\nViscosity:"); ImGui::SliderFloat("##Viscosity", &VISCOSITY, 0.1f, 100.0f);
         ImGui::End();
 
-        ImGui::SetNextWindowPos(ImVec2(0, WINDOW_HEIGHT / 5));
+        ImGui::SetNextWindowPos(ImVec2(0, WINDOW_HEIGHT / 2));
         ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, WINDOW_HEIGHT / 5));
 
         ImGui::Begin("Simulation Controls");
-        if (ImGui::Button("Start")) {  isSimulationRunning = true; }
+        if (ImGui::Button("Start/Pause")) { isSimulationRunning = !isSimulationRunning; }
         ImGui::SameLine();
-        if (ImGui::Button("Pause")) { isSimulationRunning = false; }
-        ImGui::SameLine();
-        if (ImGui::Button("Reset")) { 
-            particles.clear();
-            Initialization(1);
-		}
+        if (ImGui::Button("Reset")) { particles.clear(); Initialization(1); }
+        ImGui::End();
+
+        ImGui::SetNextWindowPos(ImVec2(0, 7 * WINDOW_HEIGHT / 10));
+        ImGui::SetNextWindowSize(ImVec2(IMGUI_WINDOW_WIDTH, 3 * WINDOW_HEIGHT / 10));
+
+        ImGui::Begin("Neighborhood Search Method");
+        NSMethodButton("Quadratic search", "Quadratic search");
+        NSMethodButton("Verlet list", "Verlet list"); ImGui::NewLine();
+        NSMethodButton("Uniform Grid", "Uniform grid");
+        NSMethodButton("Spatial hashing", "Spatial hashing"); ImGui::NewLine();
+        NSMethodButton("Index sorting", "Index Sorting");
+        NSMethodButton("Octree", "Octree");
         ImGui::End();
 
         ImGui::Render();
