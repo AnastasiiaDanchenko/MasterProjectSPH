@@ -15,6 +15,8 @@ public:
 
     bool isFluid;
 
+    int ID;
+
     std::vector<Particle*> neighbors;
     std::vector<Particle*> candidates;
 

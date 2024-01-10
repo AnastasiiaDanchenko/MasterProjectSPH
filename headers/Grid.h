@@ -1,12 +1,13 @@
 #pragma once
 #include "Particle.h"
 #include <list>
+#include <numeric>
 
 // Particle container
 extern std::vector<Particle> particles;
 extern std::vector<std::vector<std::list<Particle*>>> grid;
-extern std::vector<Particle*> linearGrid;
-extern std::vector<std::vector<Particle>> mortonGridCells;
+extern std::vector<std::list<Particle*>> linearGrid;
+extern std::vector<size_t> particleIndices;
 
 extern int GRID_WIDTH;
 extern int GRID_HEIGHT;
@@ -20,6 +21,3 @@ void GridUpdate();
 void LinearGrid();
 int LinearGridCellNumber(const int x, const int y);
 void Sorting();
-void MortonGrid();
-void MortonSorting();
-int MortonCode(const float x, const float y);

@@ -267,9 +267,32 @@ void Visualize() {
 
         glViewport(IMGUI_WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        for (auto& p : particles) {
-            if (p.isFluid) { pushVertex(p.position.x(), p.position.y(), 0.2f, 0.5f, 1.0f); }
-            else { pushVertex(p.position.x(), p.position.y(), 1.0f, 0.5f, 0.5f); }
+        for (size_t i = 0; i < particles.size(); ++i) {
+            Particle& p = particles[particleIndices[i]];
+            if (NS_METHOD == "Index Sorting") {
+                if (!p.isFluid) { pushVertex(p.position.x(), p.position.y(), 1.0f, 0.7f, 0.5f); }
+                else {
+                    float minIndex = 0.0f;
+                    float maxIndex = static_cast<float>(particles.size() - 1);
+
+                    float normalizedIndex = (i - minIndex) / (maxIndex - minIndex);
+                    float blue = 1.0f - normalizedIndex;
+
+                    pushVertex(p.position.x(), p.position.y(), blue, blue, 1.0f);
+                }
+            }
+            else {
+                if (p.isFluid) {
+                    bool isNeighbor = false;
+                    for (auto& n : p.neighbors) {
+                        if (n == &particles[PARTICLE_NEIGHBORS]) { isNeighbor = true; break; }
+                    }
+                    if (p.ID == PARTICLE_NEIGHBORS) { pushVertex(p.position.x(), p.position.y(), 1.0f, 1.0f, 0.0f); }
+                    else if (isNeighbor) { pushVertex(p.position.x(), p.position.y(), 0.0f, 1.0f, 0.0f); }
+                    else { pushVertex(p.position.x(), p.position.y(), 0.2f, 0.5f, 1.0f); }
+                }
+                else { pushVertex(p.position.x(), p.position.y(), 1.0f, 0.7f, 0.5f); }
+            }
         }
         syncBuffers();
 

@@ -8,7 +8,8 @@ Particle::Particle() :
     mass(SPACING * SPACING * REST_DENSITY),
     density(REST_DENSITY),
     pressure(0.0f),
-    isFluid(true) {}
+    isFluid(true),
+    ID(0) {}
 
 Eigen::Vector2i Particle::getCellNumber() {
 	int x = std::floor(position.x() / CELL_SIZE);
