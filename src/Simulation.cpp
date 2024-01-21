@@ -34,9 +34,9 @@ void Initialization(const int l) {
         LinearGrid();
 	}
     else if (NS_METHOD == "Octree") {
-        Octree octree(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, 10);
-        for (auto& p : particles) {
-			octree.insert(&p);
+        OctreeInit(Eigen::Vector2f(0, 0), Eigen::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT), 5, 30);
+        for (int i = 0; i < particles.size(); i++) {
+			InsertParticle(&particles[i]);
 		}
 	}
 }

@@ -18,7 +18,7 @@ int main() {
         Initialization(1);
         Visualize();
 	} else {
-        VerletAnalysis();
+        PerformanceAnalysis();
     }
 
     return 0;

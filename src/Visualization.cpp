@@ -267,9 +267,9 @@ void Visualize() {
 
         glViewport(IMGUI_WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        for (size_t i = 0; i < particles.size(); ++i) {
-            Particle& p = particles[particleIndices[i]];
-            if (NS_METHOD == "Index Sorting") {
+        if (NS_METHOD == "Index Sorting") {
+            for (size_t i = 0; i < particles.size(); ++i) {
+                Particle& p = particles[particleIndices[i]];
                 if (!p.isFluid) { pushVertex(p.position.x(), p.position.y(), 1.0f, 0.7f, 0.5f); }
                 else {
                     float minIndex = 0.0f;
@@ -281,7 +281,9 @@ void Visualize() {
                     pushVertex(p.position.x(), p.position.y(), blue, blue, 1.0f);
                 }
             }
-            else {
+        }
+        else {
+            for (auto& p : particles) {
                 if (p.isFluid) {
                     bool isNeighbor = false;
                     for (auto& n : p.neighbors) {
@@ -294,6 +296,7 @@ void Visualize() {
                 else { pushVertex(p.position.x(), p.position.y(), 1.0f, 0.7f, 0.5f); }
             }
         }
+
         syncBuffers();
 
         glClear(GL_COLOR_BUFFER_BIT);

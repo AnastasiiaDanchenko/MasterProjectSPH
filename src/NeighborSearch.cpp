@@ -121,6 +121,10 @@ void NSSorting() {
 void NSOctree() {
     for (int i = 0; i < particles.size(); i++) {
 		particles[i].neighbors.clear();
-		//octree.queryNeighbors(&particles[i], SUPPORT, particles[i].neighbors);
+
+        std::vector<Particle*> result;
+        QueryParticles(particles[i].position, result);
+
+        particles[i].neighbors = result;
 	}
 }

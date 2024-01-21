@@ -45,8 +45,8 @@ void HashTableSizeAnalysis() {
 
 void PerformanceAnalysis() {
     //std::vector<std::string> NS_METHODS = { "Quadratic search", "Verlet list", "Uniform grid", "Spatial hashing", "Index Sorting" };
-    //std::vector<std::string> NS_METHODS = { "Verlet list", "Uniform grid", "Spatial hashing", "Index Sorting" };
-    std::vector<std::string> NS_METHODS = { "Uniform grid", "Spatial hashing", "Index Sorting" };
+    std::vector<std::string> NS_METHODS = { "Quadratic search", "Verlet list", "Spatial hashing", "Index Sorting" };
+    //std::vector<std::string> NS_METHODS = { "Uniform grid", "Spatial hashing", "Index Sorting" };
     //std::vector<std::string> NS_METHODS = { "Uniform grid" };
     SIMULATION = "Initial";
 
@@ -54,11 +54,14 @@ void PerformanceAnalysis() {
     std::vector<int> nbParticles;
     int steps = 1000;
 
-    for (int i = 4; i <= 164; i += 10) {
+    //for (int i = 4; i <= 164; i += 10) {
+    for (int i = 4; i <= 34; i += 10) {
         std::cout << "Number of fluid particles: " << PARTICLES_PER_DIMENSION * i * PARTICLES_PER_DIMENSION << std::endl;
         std::vector<double> timesForCurrentParticles;
 
         for (auto method : NS_METHODS) {
+            if (method == "Quadratic search" && i > 14) { continue; }
+            if (method == "Verlet list" && i > 34) { continue; }
             int neighbors = 0;
             NS_METHOD = method;
             Initialization(i);

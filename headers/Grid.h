@@ -1,5 +1,5 @@
 #pragma once
-#include "Particle.h"
+#include "Octree.h"
 #include <list>
 #include <numeric>
 
@@ -21,3 +21,4 @@ void GridUpdate();
 void LinearGrid();
 int LinearGridCellNumber(const int x, const int y);
 void Sorting();
+void OctreeInit();
