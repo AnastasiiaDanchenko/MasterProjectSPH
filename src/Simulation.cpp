@@ -24,7 +24,7 @@ void Initialization(const int l) {
     std::cout << "Using " << NS_METHOD << " as a neighbor search method" << std::endl;
     InitBoundaries();
     InitFluid(l);
-    if (NS_METHOD == "Uniform grid") {
+    if (NS_METHOD == "Uniform grid" || NS_METHOD == "Octree") {
         UniformGrid();
     }
     else if (NS_METHOD == "Spatial hashing") {
@@ -32,11 +32,5 @@ void Initialization(const int l) {
     }
     else if (NS_METHOD == "Index Sorting") {
         LinearGrid();
-	}
-    else if (NS_METHOD == "Octree") {
-        OctreeInit(Eigen::Vector2f(0, 0), Eigen::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT), 5, 30);
-        for (int i = 0; i < particles.size(); i++) {
-			InsertParticle(&particles[i]);
-		}
 	}
 }

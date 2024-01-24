@@ -1,5 +1,5 @@
 #pragma once
-#include "Grid.h"
+#include "Octree.h"
 #include "HashTable.h"
 
 void QuadraticSearch();

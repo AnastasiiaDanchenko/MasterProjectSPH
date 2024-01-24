@@ -30,7 +30,15 @@ void NSUniformGrid() {
                 if (j < 0 || j >= GRID_WIDTH || k < 0 || k >= GRID_HEIGHT) {
 					continue;
 				}
-                for (auto& p : grid[j][k]) {
+                /*for (auto& p : grid[j][k]) {
+					float dx = p->position.x() - particles[i].position.x();
+					float dy = p->position.y() - particles[i].position.y();
+					float distance = std::sqrt(dx * dx + dy * dy);
+                    if (distance < SUPPORT) {
+						particles[i].neighbors.push_back(p);
+					}
+				}*/
+                for (auto& p : grid[j + k * GRID_WIDTH].cellParticles) {
 					float dx = p->position.x() - particles[i].position.x();
 					float dy = p->position.y() - particles[i].position.y();
 					float distance = std::sqrt(dx * dx + dy * dy);
@@ -119,12 +127,8 @@ void NSSorting() {
 }
 
 void NSOctree() {
-    for (int i = 0; i < particles.size(); i++) {
-		particles[i].neighbors.clear();
-
-        std::vector<Particle*> result;
-        QueryParticles(particles[i].position, result);
-
-        particles[i].neighbors = result;
-	}
+    GridUpdate();
+    OctreeInit(Eigen::Vector2f(0, 0), Eigen::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT), 30);
+    //SplitNode();
+    OctreeSearch();
 }

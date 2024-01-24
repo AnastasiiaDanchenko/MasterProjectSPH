@@ -1,7 +1,7 @@
 #include "..\headers\Grid.h"
 
 std::vector<Particle> particles;
-std::vector<std::vector<std::list<Particle*>>> grid;
+std::vector<GridCell> grid;
 std::vector<std::list<Particle*>> linearGrid;
 std::vector<size_t> particleIndices;
 
@@ -119,18 +119,13 @@ void UniformGrid() {
     GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / CELL_SIZE);
     std::cout << "Using uniform grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
 
-    grid.resize(GRID_WIDTH);
-    for (int i = 0; i < GRID_WIDTH; i++) {
-        grid[i].resize(GRID_HEIGHT);
-    }
+    grid.resize(GRID_WIDTH * GRID_HEIGHT);
 }
 
 void GridUpdate() {
     // Clear grid
     for (int i = 0; i < grid.size(); i++) {
-        for (int j = 0; j < grid[0].size(); j++) {
-            grid[i][j].clear();
-        }
+        grid[i].cellParticles.clear();
     }
 
     for (auto& p : particles) {
@@ -139,7 +134,7 @@ void GridUpdate() {
         if (x < 0 || x >= GRID_WIDTH || y < 0 || y >= GRID_HEIGHT) {
             continue;
         }
-        grid[x][y].push_back(&p);
+        grid[x + y * GRID_WIDTH].cellParticles.push_back(&p);
     }
 }
 
