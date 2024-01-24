@@ -138,6 +138,28 @@ void GridUpdate() {
     }
 }
 
+void GridUpdateIncremental() {
+    // Clear only the affected cells
+    for (auto& p : particles) {
+        const Eigen::Vector2i currentCell = p.currentCell;
+        const Eigen::Vector2i newCell = p.getCellNumber();
+
+        if (currentCell != newCell) {
+            // Remove particle from its current cell
+            grid[currentCell.x() + currentCell.y() * GRID_WIDTH].cellParticles.erase(
+                std::remove(grid[currentCell.x() + currentCell.y() * GRID_WIDTH].cellParticles.begin(),
+                    grid[currentCell.x() + currentCell.y() * GRID_WIDTH].cellParticles.end(), &p),
+                grid[currentCell.x() + currentCell.y() * GRID_WIDTH].cellParticles.end());
+
+            // Add particle to its new cell
+            grid[newCell.x() + newCell.y() * GRID_WIDTH].cellParticles.push_back(&p);
+
+            // Update the particle's current cell
+            p.currentCell = newCell;
+        }
+    }
+}
+
 void LinearGrid() {
     //GRID_WIDTH = std::ceil(WINDOW_WIDTH / CELL_SIZE);
     //GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / CELL_SIZE);

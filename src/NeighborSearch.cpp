@@ -127,8 +127,8 @@ void NSSorting() {
 }
 
 void NSOctree() {
-    GridUpdate();
-    OctreeInit(Eigen::Vector2f(0, 0), Eigen::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT), 30);
-    //SplitNode();
+    GridUpdateIncremental();
+    /*OctreeInit(Eigen::Vector2f(0, 0), Eigen::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT), 10);
+    SplitNode();*/
     OctreeSearch();
 }

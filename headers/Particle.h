@@ -16,6 +16,7 @@ public:
     bool isFluid;
 
     int ID;
+    Eigen::Vector2i currentCell;
 
     std::vector<Particle*> neighbors;
     std::vector<Particle*> candidates;

@@ -24,6 +24,7 @@ void InitBoundaries();
 
 void UniformGrid();
 void GridUpdate();
+void GridUpdateIncremental();
 
 void LinearGrid();
 int LinearGridCellNumber(const int x, const int y);

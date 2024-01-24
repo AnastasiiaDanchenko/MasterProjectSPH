@@ -252,9 +252,18 @@ void Visualize() {
     while (!glfwWindowShouldClose(window)) {
         if (NS_METHOD == "Verlet list") {
 			if (count == 0) { UpdateVerletList(); }
-			else if (count == 10) { count = -1; }
+			else if (count == 3) { count = -1; } // 3 - CFL number
 			count++;
-		}
+        }
+        else if (NS_METHOD == "Octree") {
+            if (count == 0) { 
+                GridUpdateIncremental();
+                OctreeInit(Eigen::Vector2f(0.0f, 0.0f), Eigen::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT), 10); 
+                SplitNode();
+            }
+			else if (count == 10) { count = -1; }
+            count++;
+        }
 
         if (isSimulationRunning) { Simulation(); }
 
