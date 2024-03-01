@@ -9,8 +9,8 @@ struct OctreeNode {
     std::vector<Eigen::Vector2i> gridCells;
     OctreeNode* children[4];
     bool isLeaf;
-    int nbParticles;
     float nodeSize;
+    int nbParticles;
 
     OctreeNode(const Eigen::Vector2f& minBounds, const Eigen::Vector2f& maxBounds)
         : minBounds(minBounds), maxBounds(maxBounds), isLeaf(true), nbParticles(0) {

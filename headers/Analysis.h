@@ -8,6 +8,8 @@ namespace plt = matplotlibcpp;
 
 void HashTableSizeAnalysis();
 void PerformanceAnalysis();
+void PerformanceAnalysisAll();
 void NeighborAnalysis();
 void CellSizeAnalysis();
 void VerletAnalysis();
+void OctreeAnalysis();

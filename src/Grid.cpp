@@ -161,13 +161,11 @@ void GridUpdateIncremental() {
 }
 
 void LinearGrid() {
-    //GRID_WIDTH = std::ceil(WINDOW_WIDTH / CELL_SIZE);
-    //GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / CELL_SIZE);
-    
-    GRID_WIDTH = std::pow(2, std::floor(std::log2(WINDOW_WIDTH / CELL_SIZE)));
-    GRID_HEIGHT = std::pow(2, std::floor(std::log2(WINDOW_HEIGHT / CELL_SIZE)));
-
+    GRID_WIDTH = std::ceil(WINDOW_WIDTH / CELL_SIZE);
+    GRID_HEIGHT = std::ceil(WINDOW_HEIGHT / CELL_SIZE);
     std::cout << "Using uniform grid with " << GRID_WIDTH << "x" << GRID_HEIGHT << " cells" << std::endl;
+
+    grid.resize(GRID_WIDTH * GRID_HEIGHT);
 
     linearGrid.resize(GRID_WIDTH * GRID_HEIGHT);
     particleIndices.resize(particles.size());
@@ -183,22 +181,25 @@ int LinearGridCellNumber(const int x, const int y) {
 uint64_t MortonCode(const int x, const int y) {
     uint64_t morton = 0;
     for (int i = 0; i < sizeof(uint64_t) * CHAR_BIT / 2; ++i) {
-        morton |= ((x & (1ULL << i)) << i) | ((y & (1ULL << i)) << (i + 1));
+        morton |= ((x >> i) & 1) << (2 * i) | ((y >> i) & 1) << (2 * i + 1);
     }
     return morton;
 }
 
 void Sorting() {
-    /*std::sort(particleIndices.begin(), particleIndices.end(), [](const int a, const int b) {
-		return LinearGridCellNumber(particles[a].position.x(), particles[a].position.y()) < 
-               LinearGridCellNumber(particles[b].position.x(), particles[b].position.y());
-		});*/
-
-    std::sort(particleIndices.begin(), particleIndices.end(), [](const int a, const int b) {
-		return MortonCode(particles[a].position.x(), particles[a].position.y()) < 
-			   MortonCode(particles[b].position.x(), particles[b].position.y());
-		});
-
+    if (NS_METHOD == "Z-Index Sorting") {
+        std::sort(particleIndices.begin(), particleIndices.end(), [](const int a, const int b) {
+            return MortonCode(particles[a].position.x(), particles[a].position.y()) <
+                MortonCode(particles[b].position.x(), particles[b].position.y());
+            });
+    }
+    else {
+        std::sort(particleIndices.begin(), particleIndices.end(), [](const int a, const int b) {
+            return LinearGridCellNumber(particles[a].position.x(), particles[a].position.y()) <
+                LinearGridCellNumber(particles[b].position.x(), particles[b].position.y());
+            });
+    }
+    
     linearGrid.clear();
     linearGrid.resize(GRID_WIDTH * GRID_HEIGHT);
 
@@ -208,5 +209,8 @@ void Sorting() {
 
         if (cellNumber < 0 || cellNumber >= GRID_WIDTH * GRID_HEIGHT) { continue; }
         linearGrid[cellNumber].push_back(&p);
+        if (grid[cellNumber].cellParticles.size() == 0) {
+			grid[cellNumber].cellParticles.push_back(&p);
+		}
     }
 }

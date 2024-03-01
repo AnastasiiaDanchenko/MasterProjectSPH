@@ -27,27 +27,21 @@ void NSUniformGrid() {
 
         for (int j = x - 1; j <= x + 1; j++) {
             for (int k = y - 1; k <= y + 1; k++) {
-                if (j < 0 || j >= GRID_WIDTH || k < 0 || k >= GRID_HEIGHT) {
-					continue;
-				}
-                /*for (auto& p : grid[j][k]) {
-					float dx = p->position.x() - particles[i].position.x();
-					float dy = p->position.y() - particles[i].position.y();
-					float distance = std::sqrt(dx * dx + dy * dy);
-                    if (distance < SUPPORT) {
-						particles[i].neighbors.push_back(p);
-					}
-				}*/
+                if (j < 0 || j >= GRID_WIDTH || k < 0 || k >= GRID_HEIGHT) { continue; }
+
                 for (auto& p : grid[j + k * GRID_WIDTH].cellParticles) {
-					float dx = p->position.x() - particles[i].position.x();
-					float dy = p->position.y() - particles[i].position.y();
-					float distance = std::sqrt(dx * dx + dy * dy);
+                    float dx = p->position.x() - particles[i].position.x();
+                    float dy = p->position.y() - particles[i].position.y();
+                    float distance = std::sqrt(dx * dx + dy * dy);
+
                     if (distance < SUPPORT) {
-						particles[i].neighbors.push_back(p);
-					}
-				}
-			}
-		}
+                        particles[i].neighbors.push_back(p);
+                        NB_PAIRS++;
+                    }
+                    NB_COMPARISONS++;
+                }
+            }
+        }
 	}
 }
 
@@ -80,7 +74,6 @@ void NSVerletList() {
 
 void NSHashTable() {
     HashTableUpdate();
-
     for (int i = 0; i < particles.size(); i++) {
 		particles[i].neighbors.clear();
         
@@ -109,16 +102,20 @@ void NSSorting() {
     for (int i : particleIndices) {
         particles[i].neighbors.clear();
 
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dy = -1; dy <= 1; dy++) {
-                int neighborCell = LinearGridCellNumber(particles[i].position.x() + dx * CELL_SIZE, particles[i].position.y() + dy * CELL_SIZE);
+        const int x = particles[i].getCellNumber().x();
+        const int y = particles[i].getCellNumber().y();
 
-                if (neighborCell < 0 || neighborCell >= GRID_WIDTH * GRID_HEIGHT) { continue; }
+        for (int j = x - 1; j <= x + 1; j++) {
+            for (int k = y - 1; k <= y + 1; k++) {
+                if (j < 0 || j >= GRID_WIDTH || k < 0 || k >= GRID_HEIGHT) { continue; }
+                
+                const int cellIndex = j + k * GRID_WIDTH;
 
-                for (auto& p : linearGrid[neighborCell]) {
-					const Eigen::Vector2f r = particles[i].position - p->position;
+                // todo: access particles using sorted linear grid
+                for (auto it = linearGrid[cellIndex].begin(); it != linearGrid[cellIndex].end(); ++it) {
+					const Eigen::Vector2f r = particles[i].position - (*it)->position;
                     if (r.squaredNorm() < pow(SUPPORT, 2)) {
-						particles[i].neighbors.push_back(p);
+						particles[i].neighbors.push_back(*it);
 					}
 				}
             }
@@ -128,7 +125,5 @@ void NSSorting() {
 
 void NSOctree() {
     GridUpdateIncremental();
-    /*OctreeInit(Eigen::Vector2f(0, 0), Eigen::Vector2f(WINDOW_WIDTH, WINDOW_HEIGHT), 10);
-    SplitNode();*/
     OctreeSearch();
 }

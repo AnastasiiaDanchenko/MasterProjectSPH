@@ -18,7 +18,6 @@ int HashTableSize() {
         tableSize++;
     }
     tableSize--;
-    std::cout << "Using Hash Table with size: " << tableSize << std::endl;
 
     return tableSize;
 }

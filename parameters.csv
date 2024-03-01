@@ -6,8 +6,8 @@ density,1
 particles,40
 timestep,0.005
 stiffness,10000.0
-viscosity,10
+viscosity,15
 neighbors,1379
-method,5
+method,2
 simulation,0
 visualization,1

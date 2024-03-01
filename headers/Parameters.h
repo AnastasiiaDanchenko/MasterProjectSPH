@@ -34,4 +34,7 @@ extern std::string NS_METHOD;
 extern std::string SIMULATION;
 extern bool VISUALIZATION;
 
+extern int NB_COMPARISONS;
+extern int NB_PAIRS;
+
 void readParameters();

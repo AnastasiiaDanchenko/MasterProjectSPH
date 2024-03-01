@@ -18,7 +18,11 @@ Eigen::Vector2f GRAVITY = Eigen::Vector2f(0.0f, -9.8f);
 
 std::string NS_METHOD;
 std::string SIMULATION;
+
 bool VISUALIZATION;
+
+int NB_COMPARISONS = 0;
+int NB_PAIRS = 0;
 
 void readParameters() {
 	std::ifstream file(fileName);
@@ -74,7 +78,8 @@ void readParameters() {
 			case 2: NS_METHOD = "Uniform grid"; break;
 			case 3: NS_METHOD = "Spatial hashing"; break;
 			case 4: NS_METHOD = "Index Sorting"; break;
-			case 5: NS_METHOD = "Octree"; break;
+			case 5: NS_METHOD = "Z-Index Sorting"; break;
+			case 6: NS_METHOD = "Octree"; break;
 			}
 		}
 		else if (parameterName == "simulation") {

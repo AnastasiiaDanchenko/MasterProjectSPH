@@ -5,7 +5,7 @@ void NeighborSearch() {
     else if (NS_METHOD == "Verlet list") { NSVerletList(); }
     else if (NS_METHOD == "Uniform grid") { NSUniformGrid(); }
     else if (NS_METHOD == "Spatial hashing") { NSHashTable(); }
-    else if (NS_METHOD == "Index Sorting") { NSSorting(); }
+    else if (NS_METHOD == "Index Sorting" || NS_METHOD == "Z-Index Sorting") { NSSorting(); }
     else if (NS_METHOD == "Octree") { NSOctree(); }
     else {
         std::cout << "Invalid neighbor search method!" << std::endl;
@@ -30,7 +30,7 @@ void Initialization(const int l) {
     else if (NS_METHOD == "Spatial hashing") {
         HashTable();
     }
-    else if (NS_METHOD == "Index Sorting") {
+    else if (NS_METHOD == "Index Sorting" || NS_METHOD == "Z-Index Sorting") {
         LinearGrid();
 	}
 }

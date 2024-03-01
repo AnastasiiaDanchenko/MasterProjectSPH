@@ -276,7 +276,7 @@ void Visualize() {
 
         glViewport(IMGUI_WINDOW_WIDTH, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        if (NS_METHOD == "Index Sorting") {
+        if (NS_METHOD == "Index Sorting" || NS_METHOD == "Z-Index Sorting") {
             for (size_t i = 0; i < particles.size(); ++i) {
                 Particle& p = particles[particleIndices[i]];
                 if (!p.isFluid) { pushVertex(p.position.x(), p.position.y(), 1.0f, 0.7f, 0.5f); }
@@ -342,6 +342,7 @@ void Visualize() {
         NSMethodButton("Uniform Grid", "Uniform grid");
         NSMethodButton("Spatial hashing", "Spatial hashing"); ImGui::NewLine();
         NSMethodButton("Index sorting", "Index Sorting");
+        NSMethodButton("Z-Index Sorting", "Z-Index Sorting"); ImGui::NewLine();
         NSMethodButton("Octree", "Octree");
         ImGui::End();
 
