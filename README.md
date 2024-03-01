@@ -1,2 +1,2 @@
-# Master Project: SPH
-Neighbor search data structures analysis for SPH fluid simulation.
+# Master Project
+Advanced data structures for neighbor search in SPH fluids
